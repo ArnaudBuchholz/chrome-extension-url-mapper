@@ -1,0 +1,21 @@
+{
+  "name": "chrome-extension-url-mapper",
+  "version": "0.1-alpha",
+  "description": "A Chrome extension to map URL",
+  "main": "",
+  "directories": {},
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArnaudBuchholz/chrome-extension-url-mapper.git"
+  },
+  "author": "Arnaud Buchholz <arnaud.buchholz@free.fr> (http://gpf-js.blogspot.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ArnaudBuchholz/chrome-extension-url-mapper/issues"
+  },
+  "homepage": "http://gpf-js.blogspot.com/",
+  "devDependencies": {
+    "eslint": "^1.6.0"
+  }
+}
