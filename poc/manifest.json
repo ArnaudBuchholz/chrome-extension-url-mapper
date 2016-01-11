@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
 
-  "name": "chrome-ext-local-proxy",
-  "description": "This extension shows a Google Image search result for the current page",
-  "version": "1.0",
+  "name": "chrome-extension-url-mapper",
+  "description": "A Chrome extension to map URL",
+  "version": "0.1",
 
   "browser_action": {
     "default_icon": "1452302928_10.Folder.png",
