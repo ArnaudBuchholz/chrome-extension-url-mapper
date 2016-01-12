@@ -5,12 +5,9 @@ A Chrome extension to map URL created and maintained by
 
 ## Purpose
 
-I had the
-The idea for this tool
-
 The tool was created to solve a server configuration issue. I wanted to be able to load the application with
 different components without changing the web server mappings (because I could not).
-With this tool, you can configure the browser to substitute URLs.
+With this tool, you can configure the browser to substitute URLs before the content is fetched.
 
 ## Features
 
