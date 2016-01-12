@@ -122,7 +122,7 @@
         "key-spacing":                  [2, {"beforeColon": false, "afterColon": true, "mode": "minimum"}],
         "linebreak-style":              [1, "unix"],
         "lines-around-comment":         0,
-        "max-nested-callbacks":         [2, 2],
+        "max-nested-callbacks":         [2, 3], "COMMENT:max-nested-callbacks: increased to 3 because of IIFE syntax": 0,
         "new-cap":                      2,
         "new-parens":                   2,
         "newline-after-var":            0,

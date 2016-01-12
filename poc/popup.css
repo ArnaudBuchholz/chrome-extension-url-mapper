@@ -44,11 +44,11 @@ body {
 }
 
 .switch.on {
-    background: url('1452642450_45.Settings.png') right 0px no-repeat;
+    background: url('1452642450_45.Settings.png') right -16px no-repeat;
 }
 
 .switch.off {
-    background: url('1452642450_45.Settings.png') right -16px no-repeat;
+    background: url('1452642450_45.Settings.png') right 0px no-repeat;
 }
 
 .new {
