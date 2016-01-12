@@ -4,7 +4,7 @@
     // Hook before Request to log requests
     chrome.webRequest.onBeforeRequest.addListener(function (details) {
         console.log(details);
-        if (details.url === "https://www.google.ca/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png") {
+        if (0 === details.url.indexOf("https://www.google.ca/images/branding/googlelogo/")) {
             return {
                 //cancel: true,
                 redirectUrl: "http://users.skynet.be/lemondeduweb/gogole/gogol.JPG"
