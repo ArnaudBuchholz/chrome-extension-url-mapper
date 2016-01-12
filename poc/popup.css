@@ -1,4 +1,60 @@
 body {
     font-family: Verdana, Arial, sans-serif;
     font-size: 100%;
+    width: 400px;
+}
+
+.current {
+    background: url('1452635909_12.File.png') no-repeat;
+    padding-left: 26px;
+    height: 26px;
+}
+
+.name {
+    display: inline-block;
+    white-space: nowrap;
+    width: 360px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.settings {
+    height: 16px;
+}
+
+.tabId {
+    position: relative;
+    display: inline-block;
+    left: -32px;
+    top: -8px;
+    height: 16px;
+    font-size: 8px;
+    color: gray;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    left: 368px;
+    top: 0px;
+    width: 32px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.switch.on {
+    background: url('1452642450_45.Settings.png') right 0px no-repeat;
+}
+
+.switch.off {
+    background: url('1452642450_45.Settings.png') right -16px no-repeat;
+}
+
+.new {
+    height: 26px;
+}
+
+input[type=file] {
+    display: none;
 }
