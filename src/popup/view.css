@@ -5,7 +5,7 @@ body {
 }
 
 .current {
-    background: url('../1452635909_12.File.png') no-repeat;
+    background: url('../gfx/File.png') no-repeat;
     padding-left: 26px;
     height: 26px;
 }
@@ -44,11 +44,11 @@ body {
 }
 
 .switch.on {
-    background: url('../1452642450_45.Settings.png') right -16px no-repeat;
+    background: url('../gfx/Settings.png') right -16px no-repeat;
 }
 
 .switch.off {
-    background: url('../1452642450_45.Settings.png') right 0px no-repeat;
+    background: url('../gfx/Settings.png') right 0px no-repeat;
 }
 
 .new {
