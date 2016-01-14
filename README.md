@@ -33,3 +33,8 @@ Use [regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript
 match URLs. Matching groups can be reused in the mapped URL.
 For instance:
 http://localhost/scripts/(.*)=file:///C:/My%20Project/$1
+
+## Resources
+
+Graphics based on [48 Bubbles](https://www.iconfinder.com/iconsets/48-bubbles) icons
+from [IconFinder](https://www.iconfinder.com/)
