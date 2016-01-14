@@ -30,7 +30,7 @@
     };
 
     document.addEventListener("DOMContentLoaded", function () {
-        var controller = um.PopupController(new PopupView());
+        var controller = new um.PopupController(new PopupView());
 
         document.getElementById("source").onchange = function () {
             // Handle the loading of the configuration file
