@@ -1,17 +1,24 @@
 (function () {
     "use strict";
 
-    var configPerTabId = {};
+    var configPerTabId = new um.ConfigurationMap(),
+        messageHandlers = {};
+
+    messageHandlers[um.MSG_QUERY_STATUS] = function (configuration, msg) {
+        return {
+            enabled: undefined !== configuration && configuration.getIsEnabled()
+        };
+    };
 
     // Message handling
     chrome.extension.onConnect.addListener(function (port) {
         port.onMessage.addListener(function (msg) {
-            if ("query-status" === msg.type) {
-                var config = configPerTabId[msg.tabId];
-                port.postMessage({
-                    type: "status",
-                    enabled: undefined !== config && config.enabled
-                });
+            var configuration = configPerTabId.get(msg.tabId),
+                handler = messageHandlers[msg.type],
+                answer = handler.call(null, configuration, msg);
+            if (answer) {
+                answer.type = msg.type;
+                port.postMessage(answer);
             }
         });
     });
