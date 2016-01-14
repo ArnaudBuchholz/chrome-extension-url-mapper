@@ -13,7 +13,7 @@
         me._port.onMessage.addListener(me._onMessage.bind(me));
         chrome.tabs.getSelected(null, function (tab) {
             me._tabId = tab.id;
-            me._view.setTabId(tabId);
+            me._view.setTabId(tab.id);
             me._postMessage(um.MSG_QUERY_STATUS);
         });
     }
