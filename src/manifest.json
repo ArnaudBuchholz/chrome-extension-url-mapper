@@ -5,10 +5,12 @@
     "version": "0.1",
     "browser_action": {
         "default_icon": "1452302928_10.Folder.png",
-        "default_popup": "popup.html"
+        "default_popup": "popup/view.html"
     },
     "background": {
         "scripts": [
+            "web.context.js",
+            "constants.js",
             "background.js"
         ]
     },
