@@ -23,6 +23,11 @@
         });
     });
 
+    // Tab events
+    chrome.tabs.onRemoved.addListener(function (tabId) {
+        configPerTabId.clear(tabId);
+    });
+
     // Hook before Request to log requests
     chrome.webRequest.onBeforeRequest.addListener(function (details) {
         console.log(details);

@@ -23,6 +23,15 @@
          */
         get: function (tabId) {
             return this._map[tabId];
+        },
+
+        /**
+         * Removes configuration associated to the tabId (if any)
+         *
+         * @param {String} tabId
+         */
+        clear: function (tabId) {
+            delete this._map[tabId];
         }
 
     };
