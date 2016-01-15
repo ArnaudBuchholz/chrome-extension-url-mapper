@@ -9,12 +9,24 @@
     function PopupController (popupView) {
         var me = this;
         me._view = popupView;
-        me._port = chrome.extension.connect({name: um.EXTENSION_NAME});
-        me._port.onMessage.addListener(me._onMessage.bind(me));
         chrome.tabs.getSelected(null, function (tab) {
             me._tabId = tab.id;
             me._view.setTabId(tab.id);
-            me._postMessage(um.MSG_QUERY_STATUS);
+            me._postMessage(um.MSG_QUERY_STATUS)
+                .then(function (response) {
+                    if (response.enabled) {
+                        chrome.browserAction.setBadgeText({
+                            tabId: me._tabId,
+                            text: "ON"
+                        });
+                    } else {
+                        chrome.browserAction.setBadgeText({
+                            tabId: me._tabId,
+                            text: ""
+                        });
+                    }
+                    me._view.setSwitchState(response.enabled);
+                });
         });
     }
 
@@ -39,29 +51,9 @@
             options = options || {};
             options.type = type;
             options.tabId = this._tabId;
-            this._port.postMessage(options);
-        },
-
-        /**
-         * A message is received from the service
-         *
-         * @param {Object} msg
-         */
-        _onMessage: function (msg) {
-            if (um.MSG_QUERY_STATUS === msg.type) {
-                if (msg.enabled) {
-                    chrome.browserAction.setBadgeText({
-                        tabId: this._tabId,
-                        text: "ON"
-                    });
-                } else {
-                    chrome.browserAction.setBadgeText({
-                        tabId: this._tabId,
-                        text: ""
-                    });
-                }
-                this._view.setSwitchState(msg.enabled);
-            }
+            return Promise(function (resolve/*, reject*/) {
+                chrome.runtime.sendMessage(options, resolve);
+            });
         },
 
         // Exposed API
@@ -70,7 +62,6 @@
         },
 
         switchState: function () {
-
         }
 
     };

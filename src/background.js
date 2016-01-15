@@ -11,16 +11,13 @@
     };
 
     // Message handling
-    chrome.extension.onConnect.addListener(function (port) {
-        port.onMessage.addListener(function (msg) {
-            var configuration = configPerTabId.get(msg.tabId),
-                handler = messageHandlers[msg.type],
-                answer = handler.call(null, configuration, msg);
-            if (answer) {
-                answer.type = msg.type;
-                port.postMessage(answer);
-            }
-        });
+    chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+        var configuration = configPerTabId.get(request.tabId),
+            handler = messageHandlers[request.type],
+            answer = handler.call(null, configuration, request);
+        if (answer) {
+            sendResponse(answer);
+        }
     });
 
     // Tab events
