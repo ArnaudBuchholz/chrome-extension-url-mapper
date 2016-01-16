@@ -14,17 +14,13 @@
             me._view.setTabId(tab.id);
             me._postMessage(um.MSG_QUERY_STATUS)
                 .then(function (response) {
+                    var text;
                     if (response.enabled) {
-                        chrome.browserAction.setBadgeText({
-                            tabId: me._tabId,
-                            text: "ON"
-                        });
+                        text = "ON";
                     } else {
-                        chrome.browserAction.setBadgeText({
-                            tabId: me._tabId,
-                            text: ""
-                        });
+                        text = "";
                     }
+                    chrome.browserAction.setBadgeText({tabId: me._tabId, text: text});
                     me._view.setSwitchState(response.enabled);
                 });
         });
@@ -46,12 +42,13 @@
          *
          * @param {String} type
          * @param {Object} [options=undefined] options
+         * @return {Promise<Object>}
          */
         _postMessage: function (type, options) {
             options = options || {};
             options.type = type;
             options.tabId = this._tabId;
-            return Promise(function (resolve/*, reject*/) {
+            return new Promise(function (resolve/*, reject*/) {
                 chrome.runtime.sendMessage(options, resolve);
             });
         },
