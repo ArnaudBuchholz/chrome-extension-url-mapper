@@ -4,7 +4,7 @@
     "description": "A Chrome extension to map URL",
     "version": "0.1",
     "browser_action": {
-        "default_icon": "gfx/Folder.png",
+        "default_icon": "gfx/folder.png",
         "default_popup": "popup/view.html"
     },
     "background": {
