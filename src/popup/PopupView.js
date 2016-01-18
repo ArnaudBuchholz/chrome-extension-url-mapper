@@ -25,6 +25,16 @@
                 newClassName += "off";
             }
             document.querySelector(".switch").className = newClassName;
+        },
+
+        // @inheritdoc IPopupView#setSwitchState
+        showError: function (message) {
+            alert(message);
+        },
+
+        // @inheritdoc IPopupView#setConfigurationName
+        setConfigurationName: function (name) {
+            document.querySelector("span.name").innerText = name;
         }
 
     };

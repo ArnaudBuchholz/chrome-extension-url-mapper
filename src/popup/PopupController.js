@@ -13,16 +13,7 @@
             me._tabId = tab.id;
             me._view.setTabId(tab.id);
             me._postMessage(um.MSG_QUERY_STATUS)
-                .then(function (response) {
-                    var text;
-                    if (response.enabled) {
-                        text = "ON";
-                    } else {
-                        text = "";
-                    }
-                    chrome.browserAction.setBadgeText({tabId: me._tabId, text: text});
-                    me._view.setSwitchState(response.enabled);
-                });
+                .then(me._updateStatus.bind(me));
         });
     }
 
@@ -53,9 +44,45 @@
             });
         },
 
+        /**
+         * Update configuration status in the view
+         *
+         * @param {Object} response
+         */
+        _updateStatus: function (response) {
+            var text;
+            if (response.enabled) {
+                text = "ON";
+            } else {
+                text = "";
+            }
+            chrome.browserAction.setBadgeText({tabId: this._tabId, text: text});
+            this._view.setSwitchState(response.enabled);
+        },
+
         // Exposed API
 
-        setConfiguration: function (content) {
+        /**
+         * Set a configuration file
+         *
+         * @param {String} textContent
+         */
+        setConfiguration: function (textContent) {
+            try {
+                // Validate configuration
+                var configuration = JSON.parse(textContent);
+                if ("string" !== typeof configuration.name && !(configuration.mappings instanceof Array)) {
+                    throw {
+                        message: "Invalid format"
+                    };
+                }
+            } catch (e) {
+                this._view.showError(e.message);
+            }
+            this._postMessage(um.MSG_SET_CONFIGURATION, {
+                configuration: configuration
+            })
+                .then(this._updateStatus.bind(this));
         },
 
         switchState: function () {
