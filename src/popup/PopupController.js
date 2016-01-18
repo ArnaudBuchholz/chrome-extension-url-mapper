@@ -12,6 +12,7 @@
         chrome.tabs.getSelected(null, function (tab) {
             me._tabId = tab.id;
             me._view.setTabId(tab.id);
+            me._view.setBusy(true);
             me._postMessage(um.MSG_QUERY_STATUS)
                 .then(me._updateStatus.bind(me));
         });
@@ -22,11 +23,11 @@
         // @property {um.IPopupView} View implementation
         _view: null,
 
-        // @property {Object} Communication channel to the service
-        _port: null,
-
         // @property {String} Current tab identifier
         _tabId: "",
+
+        // @property {Boolean|undefined} Tristate boolean for enabled state
+        _enabled: undefined,
 
         /**
          * Send a message to the service
@@ -50,14 +51,23 @@
          * @param {Object} response
          */
         _updateStatus: function (response) {
-            var text;
+            var text,
+                name;
             if (response.enabled) {
                 text = "ON";
             } else {
                 text = "";
             }
+            if (response.name) {
+                name = response.name;
+            } else {
+                name = "(click to select a configuration)";
+            }
+            this._enabled = response.enabled;
             chrome.browserAction.setBadgeText({tabId: this._tabId, text: text});
             this._view.setSwitchState(response.enabled);
+            this._view.setConfigurationName(name);
+            this._view.setBusy(false);
         },
 
         // Exposed API
@@ -79,6 +89,7 @@
             } catch (e) {
                 this._view.showError(e.message);
             }
+            this._view.setBusy(true);
             this._postMessage(um.MSG_SET_CONFIGURATION, {
                 configuration: configuration
             })
@@ -86,6 +97,14 @@
         },
 
         switchState: function () {
+            var msgType;
+            if (this._enabled) {
+                msgType = um.MSG_DISABLE_CONFIGURATION;
+            } else {
+                msgType = um.MSG_ENABLE_CONFIGURATION;
+            }
+            this._postMessage(msgType)
+                .then(this._updateStatus.bind(this));
         }
 
     };

@@ -22,7 +22,17 @@
     };
 
     messageHandlers[um.MSG_SET_CONFIGURATION] = function (configuration, msg) {
-        configuration = configPerTabId.set(request.tabId, msg.configuration);
+        configuration = configPerTabId.set(msg.tabId, msg.configuration);
+        return _getStatus(configuration);
+    };
+
+    messageHandlers[um.MSG_ENABLE_CONFIGURATION] = function (configuration, msg) {
+        configuration.enable();
+        return _getStatus(configuration);
+    };
+
+    messageHandlers[um.MSG_DISABLE_CONFIGURATION] = function (configuration, msg) {
+        configuration.disable();
         return _getStatus(configuration);
     };
 

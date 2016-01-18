@@ -34,6 +34,14 @@
 
         getIsEnabled: function () {
             return this._isEnabled;
+        },
+
+        enable: function () {
+            this._isEnabled = true;
+        },
+
+        disable: function () {
+            this._isEnabled = false;
         }
 
     };
