@@ -11,6 +11,13 @@
     IPopupView.prototype = {
 
         /**
+         * Blocks the dialog to signal a busy state
+         *
+         * @param {String} busy
+         */
+        setBusy: function (busy) {},
+
+        /**
          * Display the current tab identifier
          *
          * @param {String} tabId

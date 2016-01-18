@@ -2,6 +2,8 @@ body {
     font-family: Verdana, Arial, sans-serif;
     font-size: 100%;
     width: 400px;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .current {
@@ -57,4 +59,26 @@ body {
 
 input[type=file] {
     display: none;
+}
+
+#busy {
+    display: none;
+}
+
+.busy {
+    background-color: gray;
+}
+
+.busy #busy {
+    background-color: black;
+    color: white;
+    display: block;
+    position: absolute;
+    z-index: 1;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    opacity: .5;
+    text-align: center;
 }

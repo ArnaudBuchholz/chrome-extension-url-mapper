@@ -11,6 +11,15 @@
 
     PopupView.prototype = {
 
+        // @inheritdoc IPopupView#setBusy
+        setBusy: function (busy) {
+            if (busy) {
+                document.className = "busy";
+            } else {
+                document.className = "";
+            }
+        },
+
         // @inheritdoc IPopupView#setTabId
         setTabId: function (tabId) {
             document.querySelector(".tabId").innerHTML = tabId;
@@ -19,7 +28,7 @@
         // @inheritdoc IPopupView#setSwitchState
         setSwitchState: function (state) {
             var newClassName = "switch ";
-            if (status) {
+            if (state) {
                 newClassName += "on";
             } else {
                 newClassName += "off";
@@ -34,7 +43,9 @@
 
         // @inheritdoc IPopupView#setConfigurationName
         setConfigurationName: function (name) {
-            document.querySelector("span.name").innerText = name;
+            var namePlaceholder = document.querySelector("span.name");
+            namePlaceholder.innerHTML = ""; // clean
+            namePlaceholder.appendChild(document.createTextNode(name)); // Safest way
         }
 
     };
