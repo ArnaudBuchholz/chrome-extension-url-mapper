@@ -32,13 +32,20 @@
     document.addEventListener("DOMContentLoaded", function () {
         var controller = new um.PopupController(new PopupView());
 
-        document.getElementById("source").onchange = function () {
-            // Handle the loading of the configuration file
-            controller.setConfiguration();
+        document.getElementById("source").onchange = function (event) {
+            var file = event.target.files[0],
+                reader;
+            if (undefined !== file) {
+                reader = new FileReader();
+                reader.onload = function (/*event*/) {
+                    controller.setConfiguration(reader.result);
+                }
+                reader.readAsText(file);
+            }
         };
 
         document.querySelector("span.name").addEventListener("click", function () {
-            // Open file dialog
+            document.getElementById("source").click();
         });
 
         document.querySelector(".switch").addEventListener("click", function () {
