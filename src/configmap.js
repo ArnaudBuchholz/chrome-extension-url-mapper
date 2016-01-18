@@ -33,7 +33,7 @@
          * @return {Configuration}
          */
         set: function (tabId, configuration) {
-            return this._map[tabId] = new Configuration(tabId, configuration);
+            return this._map[tabId] = new um.Configuration(tabId, configuration);
         },
 
         /**
