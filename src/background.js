@@ -4,10 +4,26 @@
     var configPerTabId = new um.ConfigurationMap(),
         messageHandlers = {};
 
-    messageHandlers[um.MSG_QUERY_STATUS] = function (configuration, msg) {
+    function _getStatus (configuration) {
         return {
-            enabled: undefined !== configuration && configuration.getIsEnabled()
+            name: configuration.getName(),
+            enabled: configuration.getIsEnabled()
         };
+    }
+
+    messageHandlers[um.MSG_QUERY_STATUS] = function (configuration, msg) {
+        if (undefined !== configuration) {
+            return _getStatus(configuration);
+        }
+        return {
+            name: "",
+            enabled: false
+        };
+    };
+
+    messageHandlers[um.MSG_SET_CONFIGURATION] = function (configuration, msg) {
+        configuration = configPerTabId.set(request.tabId, msg.configuration);
+        return _getStatus(configuration);
     };
 
     // Message handling

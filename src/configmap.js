@@ -26,6 +26,17 @@
         },
 
         /**
+         * Set configuration associated to the tabId
+         *
+         * @param {String} tabId
+         * @param {Object} configuration JSON
+         * @return {Configuration}
+         */
+        set: function (tabId, configuration) {
+            return this._map[tabId] = new Configuration(tabId, configuration);
+        },
+
+        /**
          * Removes configuration associated to the tabId (if any)
          *
          * @param {String} tabId
