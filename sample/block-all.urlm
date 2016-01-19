@@ -1,0 +1,7 @@
+{
+    "name": "Block all",
+    "mappings": [{
+        "match": ".*",
+        "block": true
+    }]
+}
