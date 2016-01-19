@@ -11,6 +11,7 @@
         "scripts": [
             "web.context.js",
             "constants.js",
+            "mapping.js",
             "configuration.js",
             "configmap.js",
             "background.js"
