@@ -21,10 +21,10 @@ Define JSON configuration files containing mappings, basic syntax is:
         block: true
     }, {
         url: "http://localhost/resource/logo.jpg",
-        replace: "file:///C:/My%20Project/resource/logo-debug.jpg"
+        redirect: "file:///C:/My%20Project/resource/logo-debug.jpg"
     }, {
         match: "http://localhost/scripts/(.*)",
-        replace: "file:///C:/My%20Project/$1"
+        redirect: "file:///C:/My%20Project/$1"
     }]
 }
 ```
