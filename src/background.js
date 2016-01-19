@@ -52,13 +52,11 @@
     });
 
     // Hook before Request to log requests
-    chrome.webRequest.onBeforeRequest.addListener(function (details) {
-        console.log(details);
-        if (0 === details.url.indexOf("https://www.google.ca/images/branding/googlelogo/")) {
-            return {
-                //cancel: true,
-                redirectUrl: "http://users.skynet.be/lemondeduweb/gogole/gogol.JPG"
-            };
+    chrome.webRequest.onBeforeRequest.addListener(function (request) {
+        var tabId = request.tabId,
+            configuration = configPerTabId.get(request.tabId);
+        if (configuration) {
+            return configuration.processRequest(request);
         }
     }, {
         urls: ["<all_urls>"]
