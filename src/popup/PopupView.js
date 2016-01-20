@@ -7,7 +7,7 @@
      * @implements IPopupView
      * @constructor
      */
-    function PopupView() {}
+    function PopupView () {}
 
     PopupView.prototype = {
 
@@ -38,7 +38,7 @@
 
         // @inheritdoc IPopupView#setSwitchState
         showError: function (message) {
-            alert(message);
+            alert(message); //eslint-disable-line no-alert
         },
 
         // @inheritdoc IPopupView#setConfigurationName
@@ -60,7 +60,7 @@
                 reader = new FileReader();
                 reader.onload = function (/*event*/) {
                     controller.setConfiguration(reader.result);
-                }
+                };
                 reader.readAsText(file);
             }
         };
