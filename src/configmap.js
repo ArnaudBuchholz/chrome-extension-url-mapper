@@ -29,11 +29,13 @@
          * Set configuration associated to the tabId
          *
          * @param {String} tabId
-         * @param {Object} configuration JSON
+         * @param {Object} configJSON Configuration JSON
          * @return {Configuration}
          */
-        set: function (tabId, configuration) {
-            return this._map[tabId] = new um.Configuration(tabId, configuration);
+        set: function (tabId, configJSON) {
+            var configuration = new um.Configuration(tabId, configJSON);
+            this._map[tabId] = configuration;
+            return configuration;
         },
 
         /**
