@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>chrome-extension-url-mapper</title>
+        <link rel="stylesheet" href="../../node_modules/mocha/mocha.css" />
+    </head>
+    <body>
+        <div id="mocha"></div>
+        <script src="../../node_modules/jquery/dist/jquery.js"></script>
+        <script src="../../node_modules/mocha/mocha.js"></script>
+        <script>
+            mocha.setup("bdd");
+            function assert(condition) {
+                if (!condition) {
+                    throw "ASSERTION failed";
+                }
+            }
+            var module = {};
+        </script>
+        <script src="chrome.js"></script>
+        <script>
+            var chrome = module.exports;
+        </script>
+        <script src="../../src/web.context.js"></script>
+        <script src="../../src/constants.js"></script>
+        <script src="../../src/mapping.js"></script>
+        <script src="../../src/configuration.js"></script>
+        <script src="../../src/configmap.js"></script>
+        <script src="../../src/background.js"></script>
+        <script src="../../src/popup/PopupController.js"></script>
+        <script src="PopupView.js"></script>
+        <script>
+            um.PopupView = module.exports;
+        </script>
+        <script src="../environment.js"></script>
+        <script>
+            mocha.checkLeaks();
+            mocha.globals([
+                "jQuery",
+                "chrome",
+                "um"
+            ]);
+            mocha.run();
+        </script>
+    </body>
+</html>
