@@ -20,4 +20,7 @@
     // Mocks PopupView
     um.PopupView = require("./PopupView.js");
 
+    // Load tests
+    require("../environment.js");
+
 }());
