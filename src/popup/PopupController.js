@@ -9,12 +9,17 @@
     function PopupController (popupView) {
         var me = this;
         me._view = popupView;
-        chrome.tabs.getSelected(null, function (tab) {
+        me._updateStatus = me._updateStatus.bind(me);
+        chrome.tabs.query({
+            currentWindow: true,
+            active: true
+        }, function (tabs) {
+            var tab = tabs[0];
             me._tabId = tab.id;
             me._view.setTabId(tab.id);
             me._view.setBusy(true);
             me._postMessage(um.MSG_QUERY_STATUS)
-                .then(me._updateStatus.bind(me));
+                .then(me._updateStatus);
         });
     }
 
@@ -26,11 +31,11 @@
         // @property {String} Current tab identifier
         _tabId: "",
 
-        // @property {Boolean|undefined} Tristate boolean for enabled state
+        // @property {Boolean|undefined} Tri-state boolean for enabled state
         _enabled: undefined,
 
         /**
-         * Send a message to the service
+         * Send a message to the background service
          *
          * @param {String} type
          * @param {Object} [options=undefined] options
@@ -78,13 +83,12 @@
          * @param {String} textContent
          */
         setConfiguration: function (textContent) {
+            var configuration;
             try {
                 // Validate configuration
-                var configuration = JSON.parse(textContent);
+                configuration = JSON.parse(textContent);
                 if ("string" !== typeof configuration.name && !(configuration.mappings instanceof Array)) {
-                    throw {
-                        message: "Invalid format"
-                    };
+                    throw new Error("Invalid format");
                 }
             } catch (e) {
                 this._view.showError(e.message);
@@ -93,7 +97,7 @@
             this._postMessage(um.MSG_SET_CONFIGURATION, {
                 configuration: configuration
             })
-                .then(this._updateStatus.bind(this));
+                .then(this._updateStatus);
         },
 
         switchState: function () {
@@ -104,7 +108,7 @@
                 msgType = um.MSG_ENABLE_CONFIGURATION;
             }
             this._postMessage(msgType)
-                .then(this._updateStatus.bind(this));
+                .then(this._updateStatus);
         }
 
     };
