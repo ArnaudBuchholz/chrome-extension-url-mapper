@@ -5,14 +5,14 @@
      * Configuration class
      *
      * @param {String} tabId
-     * @param {Object} configuration JSON
+     * @param {Object} configJSON configuration JSON
      * @constructor
      */
-    function Configuration (tabId, configuration) {
+    function Configuration (tabId, configJSON) {
         this._tabId = tabId;
-        this._name = configuration.name;
+        this._name = configJSON.name;
         var mappings = this._mappings = [];
-        configuration.mappings.forEach(function (mapping) {
+        configJSON.mappings.forEach(function (mapping) {
             mappings.push(new um.Mapping(mapping));
         });
     }
@@ -51,7 +51,7 @@
             this._isEnabled = false;
         },
 
-        processRequest: function (request) {
+        map: function (request) {
             if (!this._isEnabled) {
                 return; // undefined => nothing
             }
@@ -66,18 +66,6 @@
                     return mapping.process(request, matchResult);
                 }
             }
-
-
-
-/*
-            console.log(details);
-            if (0 === details.url.indexOf("https://www.google.ca/images/branding/googlelogo/")) {
-                return {
-                    //cancel: true,
-                    redirectUrl: "http://users.skynet.be/lemondeduweb/gogole/gogol.JPG"
-                };
-            }
-*/
         }
 
     };
