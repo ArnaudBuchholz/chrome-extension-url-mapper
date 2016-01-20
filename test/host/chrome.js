@@ -11,9 +11,10 @@
                 listener.apply(null, args);
             });
         };
-        result.addEventListener = function (listener) {
+        result.addListener = function (listener) {
             listeners.push(listener);
         };
+        return result;
     }
 
     module.exports = {
@@ -34,7 +35,7 @@
             },
             onRemoved: _allocateEventHandler()
         },
-        webRequests: {
+        webRequest: {
             onBeforeRequest: _allocateEventHandler()
         }
     };
