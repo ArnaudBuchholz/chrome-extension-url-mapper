@@ -11,7 +11,7 @@
         };
     }
 
-    messageHandlers[um.MSG_QUERY_STATUS] = function (configuration, msg) {
+    messageHandlers[um.MSG_QUERY_STATUS] = function (configuration/*, msg*/) {
         if (undefined !== configuration) {
             return _getStatus(configuration);
         }
@@ -26,12 +26,12 @@
         return _getStatus(configuration);
     };
 
-    messageHandlers[um.MSG_ENABLE_CONFIGURATION] = function (configuration, msg) {
+    messageHandlers[um.MSG_ENABLE_CONFIGURATION] = function (configuration/*, msg*/) {
         configuration.enable();
         return _getStatus(configuration);
     };
 
-    messageHandlers[um.MSG_DISABLE_CONFIGURATION] = function (configuration, msg) {
+    messageHandlers[um.MSG_DISABLE_CONFIGURATION] = function (configuration/*, msg*/) {
         configuration.disable();
         return _getStatus(configuration);
     };
@@ -40,7 +40,7 @@
     chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         var configuration = configPerTabId.get(request.tabId),
             handler = messageHandlers[request.type],
-            answer = handler.call(null, configuration, request);
+            answer = handler(configuration, request);
         if (answer) {
             sendResponse(answer);
         }
@@ -53,10 +53,9 @@
 
     // Hook before Request to log requests
     chrome.webRequest.onBeforeRequest.addListener(function (request) {
-        var tabId = request.tabId,
-            configuration = configPerTabId.get(request.tabId);
+        var configuration = configPerTabId.get(request.tabId);
         if (configuration) {
-            return configuration.processRequest(request);
+            return configuration.map(request);
         }
     }, {
         urls: ["<all_urls>"]
