@@ -4,19 +4,19 @@
     /**
      * Mapping class
      *
-     * @param {Object} mapping JSON
+     * @param {Object} mappingJSON mapping JSON
      * @constructor
      */
-    function Mapping (mapping) {
-        if (mapping.url) {
-            this._urlStartWith = mapping.url;
+    function Mapping (mappingJSON) {
+        if (mappingJSON.url) {
+            this._urlStartWith = mappingJSON.url;
         } else {
-            this._urlRegExp = new RegExp(mapping.match);
+            this._urlRegExp = new RegExp(mappingJSON.match);
         }
-        if (mapping.block) {
+        if (mappingJSON.block) {
             this._blocking = true;
         } else {
-            this._redirect = mapping.redirect;
+            this._redirect = mappingJSON.redirect;
         }
     }
 
@@ -46,10 +46,9 @@
                 matchResult;
             if (this._urlStartWith) {
                 return 0 === url.indexOf(this._urlStartWith);
-            } else {
-                matchResult = this._urlRegExp.exec(url);
-                return matchResult;
             }
+            matchResult = this._urlRegExp.exec(url);
+            return matchResult;
         },
 
         /**
@@ -63,6 +62,11 @@
             if (this._blocking) {
                 return {
                     cancel: true
+                };
+            }
+            if (this._redirect) {
+                return {
+                    redirectUrl: this._getRedirect(matchResult)
                 };
             }
         }
