@@ -192,7 +192,8 @@
     "globals": {
         "chrome":                       false,
         "console":                      true,
-        "setTimeout":                   true
+        "setTimeout":                   true,
+        "um":                           false
     },
     "env": {
         "browser": true
