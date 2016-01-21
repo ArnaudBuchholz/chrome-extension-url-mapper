@@ -66,7 +66,7 @@
             if (response.name) {
                 name = response.name;
             } else {
-                name = "(click to select a configuration)";
+                name = um.MSG_NO_CONFIGURATION;
             }
             this._enabled = response.enabled;
             chrome.browserAction.setBadgeText({tabId: this._tabId, text: text});
@@ -107,6 +107,7 @@
             } else {
                 msgType = um.MSG_ENABLE_CONFIGURATION;
             }
+            this._view.setBusy(true);
             this._postMessage(msgType)
                 .then(this._updateStatus);
         }
