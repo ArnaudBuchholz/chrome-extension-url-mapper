@@ -63,7 +63,7 @@
                 mapping = this._mappings[idx];
                 matchResult = mapping.match(request);
                 if (matchResult) {
-                    return mapping.process(request, matchResult);
+                    return mapping.override(request, matchResult);
                 }
             }
         }
