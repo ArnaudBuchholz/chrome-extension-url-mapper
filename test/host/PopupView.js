@@ -27,9 +27,20 @@
         // @property {String} Last displayed configuration name
         name: "",
 
+        /**
+         * @property {Function} Triggered when busy state no more true (synchronization helper)
+         * The property is reset automatically after triggering
+         */
+        whenNoMoreBusy: function () {},
+
         // @inheritdoc IPopupView#setBusy
         setBusy: function (busy) {
             this.busy = busy;
+            if (!busy) {
+                var callback = this.whenNoMoreBusy;
+                delete this.whenNoMoreBusy;
+                callback();
+            }
         },
 
         // @inheritdoc IPopupView#setTabId
