@@ -34,6 +34,9 @@ match URLs. Matching groups can be reused in the mapped URL.
 For instance:
 http://localhost/scripts/(.*)=file:///C:/My%20Project/$1
 
+## Security consideration
+
+
 ## Resources
 
 Graphics based on [48 Bubbles](https://www.iconfinder.com/iconsets/48-bubbles) icons
