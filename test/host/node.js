@@ -23,5 +23,6 @@
     // Load tests
     require("../environment.js");
     require("../multitabs.js");
+    require("../mapping.js");
 
 }());
