@@ -44,21 +44,29 @@
         match: function (request) {
             var url = request.url,
                 matchResult;
-            if (this._urlStartWith) {
-                return 0 === url.indexOf(this._urlStartWith);
+            if (this._urlStartWith && 0 === url.indexOf(this._urlStartWith)) {
+                return this._override(request, this._replaceStartOfUrl);
             }
-            matchResult = this._urlRegExp.exec(url);
-            return matchResult;
+            //matchResult = this._urlRegExp.exec(url);
+            //if (matchResult) {
+            //
+            //}
+        },
+
+        // Replaces the start of the URL (matching with this._urlStartWith)
+        _replaceStartOfUrl: function (request) {
+            return this._redirect + request.url.substr(this._urlStartWith.length);
         },
 
         /**
          * Override the given request
          *
          * @param {Object} request Object received on chrome.webRequest.onBeforeRequest
-         * @param {*} matchResult match result
+         * @param {Function} buildURLCallback callback to call when building the redirect URL
+         * @param {*} buildURLCallbackParam last parameter of the buildURLCallback functio
          * @return {Object} result of chrome.webRequest.onBeforeRequest
          */
-        override: function (request, matchResult) {
+        _override: function (request, buildURLCallback, buildURLCallbackParam) {
             if (this._blocking) {
                 return {
                     cancel: true
@@ -66,7 +74,7 @@
             }
             if (this._redirect) {
                 return {
-                    redirectUrl: this._getRedirect(matchResult)
+                    redirectUrl: buildURLCallback.call(this, request, buildURLCallbackParam)
                 };
             }
         }

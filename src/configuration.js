@@ -52,18 +52,15 @@
         },
 
         map: function (request) {
-            if (!this._isEnabled) {
-                return; // undefined => nothing
-            }
-            var idx,
-                len = this._mappings.length,
-                mapping,
-                matchResult;
-            for (idx = 0; idx < len; ++idx) {
-                mapping = this._mappings[idx];
-                matchResult = mapping.match(request);
-                if (matchResult) {
-                    return mapping.override(request, matchResult);
+            if (this._isEnabled) {
+                var len = this._mappings.length,
+                    idx,
+                    override;
+                for (idx = 0; idx < len; ++idx) {
+                    override = this._mappings[idx].match(request);
+                    if (override) {
+                        return override;
+                    }
                 }
             }
         }
