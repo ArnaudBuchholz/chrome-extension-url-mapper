@@ -50,10 +50,21 @@
         id: "",
 
         // @property {Boolean} (allocated) tab is active
-        active: true,
+        active: false,
 
         // @property {String} (allocated) tab is selected
-        selected: true
+        selected: false,
+
+        // Make this tab active
+        setActive: function () {
+            Object.keys(_tabs).forEach(function (tabId) {
+                var tab = _tabs[tabId];
+                delete tab.active;
+                delete tab.selected;
+            });
+            this.active = true;
+            this.selected = true;
+        }
     };
 
     var _chrome = {
@@ -88,6 +99,7 @@
                 callback = callback || _nop;
                 var tab = new _Tab(createProperties);
                 setTimeout(function () {
+                    tab.setActive();
                     callback(tab);
                 }, 0);
             },
