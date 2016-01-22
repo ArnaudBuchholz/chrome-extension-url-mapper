@@ -127,4 +127,3 @@ describe("Testing with multiple tabs", function () {
     });
 
 });
-
