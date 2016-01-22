@@ -22,5 +22,6 @@
 
     // Load tests
     require("../environment.js");
+    require("../multitabs.js");
 
 }());
