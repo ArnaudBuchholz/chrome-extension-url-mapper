@@ -8,7 +8,7 @@ describe("Testing the environment", function () {
 
     var URL = "https://github.com/ArnaudBuchholz/chrome-extension-url-mapper";
 
-    describe("Create the tab and simulate the PopupView", function () {
+    describe("Create one tab and simulate the PopupView", function () {
 
         var tab,
             view,
