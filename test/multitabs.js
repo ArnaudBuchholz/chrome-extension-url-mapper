@@ -22,13 +22,14 @@ describe("Testing with multiple tabs", function () {
                     done();
                 }
             }
+            function onTabCreated (newTab) {
+                tabs.push(newTab);
+                newTab.popupView = new um.PopupView();
+                newTab.popupView.whenNoMoreBusy = doneOnCount;
+                newTab.popupController = new um.PopupController(newTab.popupView);
+            }
             for (idx = 0; idx < COUNT; ++idx) {
-                chrome.tabs.create({}, function (newTab) {
-                    tabs.push(newTab);
-                    newTab.popupView = new um.PopupView();
-                    newTab.popupView.whenNoMoreBusy = doneOnCount;
-                    newTab.popupController = new um.PopupController(newTab.popupView);
-                });
+                chrome.tabs.create({}, onTabCreated);
             }
         });
 
@@ -54,7 +55,7 @@ describe("Testing with multiple tabs", function () {
                 };
                 tab.popupController.setConfiguration(JSON.stringify({
                     name: "test",
-                    mappings:[{
+                    mappings: [{
                         url: URL,
                         block: true
                     }]
@@ -111,7 +112,7 @@ describe("Testing with multiple tabs", function () {
 
                 it("cleaned the mapping", function () {
                     // Border-line: we are not supposed to call this method once the tab is closed
-                    tabs.forEach(function (tab, index) {
+                    tabs.forEach(function (tab) {
                         var answer = chrome.webRequest.onBeforeRequest({
                             tabId: tab.id,
                             url: URL
