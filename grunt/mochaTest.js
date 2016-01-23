@@ -7,7 +7,12 @@ module.exports = {
         options: {
             reporter: "spec",
             quiet: false,
-            require: "test/host/node.js"
+            require: [
+                function () { //eslint-disable-line strict
+                    global.assert = require("assert");
+                },
+                "test/host/node.js"
+            ]
         },
         src: "test/*.js"
     }
