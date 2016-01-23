@@ -20,11 +20,4 @@
     // Mocks PopupView
     um.PopupView = require("./PopupView.js");
 
-    // Load tests
-    global.assert = require("assert");
-
-    if ("undefined" === typeof describe) {
-        require("./mocha.js");
-    }
-
 }());
