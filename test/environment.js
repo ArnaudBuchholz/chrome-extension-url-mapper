@@ -27,7 +27,7 @@ describe("Testing the environment", function () {
             assert(tab.id === view.tabId);
         });
 
-        it("gots an initial state", function () {
+        it("gets an initial state", function () {
             assert(um.MSG_NO_CONFIGURATION === view.name);
             assert(false === view.state);
         });
@@ -69,7 +69,7 @@ describe("Testing the environment", function () {
                     chrome.tabs.remove(tab.id, done);
                 });
 
-                it("cleaned the mapping", function () {
+                it("cleans the mapping", function () {
                     // Border-line: we are not supposed to call this method once the tab is closed
                     var answer = chrome.webRequest.onBeforeRequest({
                         tabId: tab.id,

@@ -39,7 +39,7 @@ describe("Testing with multiple tabs", function () {
             });
         });
 
-        it("gots an initial state", function () {
+        it("gets an initial state", function () {
             tabs.forEach(function (tab) {
                 assert(um.MSG_NO_CONFIGURATION === tab.popupView.name);
                 assert(false === tab.popupView.state);
@@ -110,7 +110,7 @@ describe("Testing with multiple tabs", function () {
                     });
                 });
 
-                it("cleaned the mapping", function () {
+                it("cleans the mapping", function () {
                     // Border-line: we are not supposed to call this method once the tab is closed
                     tabs.forEach(function (tab) {
                         var answer = chrome.webRequest.onBeforeRequest({
