@@ -1,8 +1,3 @@
-/*eslint-env mocha*/
-/*global assert*/
-
-/*eslint-disable max-nested-callbacks*/
-
 describe("Testing the environment", function () {
     "use strict";
 

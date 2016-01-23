@@ -1,6 +1,5 @@
 (function () {
     "use strict";
-    /*eslint-env node*/
 
     /**
      * Popup View mock

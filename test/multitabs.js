@@ -1,8 +1,3 @@
-/*eslint-env mocha*/
-/*global assert*/
-
-/*eslint-disable max-nested-callbacks*/
-
 describe("Testing with multiple tabs", function () {
     "use strict";
 

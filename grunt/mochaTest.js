@@ -1,14 +1,13 @@
-"use strict"; //eslint-disable-line strict
-/*eslint-env node*/
+"use strict";
 
-// Test automation inside NodeJS
 module.exports = {
+
     source: {
         options: {
             reporter: "spec",
             quiet: false,
             require: [
-                function () { //eslint-disable-line strict
+                function () {
                     global.assert = require("assert");
                 },
                 "test/host/node.js"
@@ -16,4 +15,5 @@ module.exports = {
         },
         src: "test/*.js"
     }
+
 };

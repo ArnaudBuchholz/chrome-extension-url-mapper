@@ -1,6 +1,5 @@
 (function () {
     "use strict";
-    /*eslint-env node*/
 
     // Defines namespace
     global.um = {};

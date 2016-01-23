@@ -1,6 +1,5 @@
 (function () {
     "use strict";
-    /*eslint-env node*/
 
     require("./node.js");
 

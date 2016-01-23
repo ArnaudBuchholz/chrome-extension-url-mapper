@@ -1,9 +1,11 @@
-"use strict"; //eslint-disable-line strict
-/*eslint-env node*/
+"use strict";
 
 module.exports = {
-    options: {
-        configFile: ".eslintrc"
-    },
-    target: ["src/**/*.js", "test/**/*.js"]
+
+    target: [
+        "grunt/**/*.js",
+        "src/**/*.js",
+        "test/**/*.js"
+    ]
+
 };
