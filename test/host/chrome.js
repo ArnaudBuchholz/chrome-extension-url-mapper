@@ -2,13 +2,13 @@
     "use strict";
     /*eslint-env node*/
 
-    function _nop() {}
+    function _nop () {}
 
     function _allocateEventHandler (synchronous) {
         var listeners = [],
-            result;
+            handler;
         if (synchronous) {
-            result = function () {
+            handler = function () {
                 var args = arguments,
                     result;
                 listeners.forEach(function (listener) {
@@ -17,7 +17,7 @@
                 return result;
             };
         } else {
-            result = function () {
+            handler = function () {
                 var args = arguments;
                 setTimeout(function () {
                     listeners.forEach(function (listener) {
@@ -26,22 +26,23 @@
                 }, 0);
             };
         }
-        result.addListener = function (listener) {
+        handler.addListener = function (listener) {
             listeners.push(listener);
         };
-        return result;
+        return handler;
     }
 
     var _tabs = {};
 
     function _Tab (properties) {
+        var me = this;
         // Allocate a random unique tab identifier
         do {
-            this.id = "" + Math.floor(Math.random() * 1000);
-        } while (_tabs.hasOwnProperty(this.id));
-        _tabs[this.id] = this;
+            me.id = String(Math.floor(Math.random() * 1000));
+        } while (_tabs.hasOwnProperty(me.id));
+        _tabs[me.id] = me;
         Object.keys(properties).forEach(function (key) {
-            this[key] = properties[key];
+            me[key] = properties[key];
         });
     }
 
@@ -49,11 +50,14 @@
         // @property {String} (allocated) tab identifier
         id: "",
 
-        // @property {Boolean} (allocated) tab is active
+        // @property {Boolean} tab is active
         active: false,
 
-        // @property {String} (allocated) tab is selected
+        // @property {String} tab is selected
         selected: false,
+
+        // @property {String} badge text
+        badgeText: "",
 
         // Make this tab active
         setActive: function () {
@@ -71,10 +75,12 @@
 
         // https://developer.chrome.com/extensions/browserAction
         browserAction: {
-
             // https://developer.chrome.com/extensions/browserAction#method-setBadgeText
             setBadgeText: function (details) {
-                // expect details.tabId & details.text
+                var tab = _tabs[details.tabId];
+                if (undefined !== tab) {
+                    tab.badgeText = details.text;
+                }
             }
         },
 
