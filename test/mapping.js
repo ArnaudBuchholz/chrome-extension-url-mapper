@@ -87,12 +87,11 @@ describe("Mapping", function () {
                         url: "http://myWebSite.com/test/index.html#main"
                     });
                     assert(override);
-                    assert(override.redirectUrl ===
-                        "file://C:/webProject/src/test/index.html?from=myWebSite.com#main");
+                    var expected = "file://C:/webProject/src/test/index.html?from=myWebSite.com#main";
+                    assert(override.redirectUrl === expected);
                 });
 
             });
-
 
         });
 
