@@ -21,8 +21,10 @@
     um.PopupView = require("./PopupView.js");
 
     // Load tests
-    require("../environment.js");
-    require("../multitabs.js");
-    require("../mapping.js");
+    global.assert = require("assert");
+
+    if ("undefined" === typeof describe) {
+        require("./mocha.js");
+    }
 
 }());
