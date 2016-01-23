@@ -37,10 +37,10 @@ describe("Testing the environment", function () {
                 view.whenNoMoreBusy = function () {
                     view.whenNoMoreBusy = done;
                     controller.switchState();
-                }
+                };
                 controller.setConfiguration(JSON.stringify({
                     name: "test",
-                    mappings:[{
+                    mappings: [{
                         url: URL,
                         block: true
                     }]
