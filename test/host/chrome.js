@@ -156,7 +156,10 @@
             },
 
             // https://developer.chrome.com/extensions/tabs#event-onRemoved
-            onRemoved: _allocateEventHandler(false)
+            onRemoved: _allocateEventHandler(false),
+
+            // https://developer.chrome.com/extensions/tabs#event-onUpdated
+            onUpdated: _allocateEventHandler(false)
         },
 
         // https://developer.chrome.com/extensions/webRequest
