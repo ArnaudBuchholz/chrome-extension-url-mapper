@@ -56,20 +56,13 @@
          * @param {Object} response
          */
         _updateStatus: function (response) {
-            var text,
-                name;
-            if (response.enabled) {
-                text = "ON";
-            } else {
-                text = "";
-            }
+            var name;
             if (response.name) {
                 name = response.name;
             } else {
                 name = um.MSG_NO_CONFIGURATION;
             }
             this._enabled = response.enabled;
-            chrome.browserAction.setBadgeText({tabId: this._tabId, text: text});
             this._view.setSwitchState(response.enabled);
             this._view.setConfigurationName(name);
             this._view.setBusy(false);
