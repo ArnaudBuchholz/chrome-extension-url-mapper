@@ -5,9 +5,23 @@
         messageHandlers = {};
 
     function _getStatus (configuration) {
+        if (!configuration) {
+            return {
+                name: "",
+                enabled: false
+            };
+        }
+        var enabled =  configuration.getIsEnabled(),
+            badgeText;
+        if (enabled) {
+            badgeText = "ON";
+        } else {
+            badgeText = "";
+        }
+        chrome.browserAction.setBadgeText({tabId: configuration.getTabId(), text: badgeText});
         return {
             name: configuration.getName(),
-            enabled: configuration.getIsEnabled()
+            enabled: enabled
         };
     }
 
@@ -27,7 +41,9 @@
     };
 
     messageHandlers[um.MSG_ENABLE_CONFIGURATION] = function (configuration/*, msg*/) {
-        configuration.enable();
+        if (configuration) {
+            configuration.enable();
+        }
         return _getStatus(configuration);
     };
 
@@ -49,6 +65,13 @@
     // Tab events
     chrome.tabs.onRemoved.addListener(function (tabId) {
         configPerTabId.clear(tabId);
+    });
+
+    chrome.tabs.onUpdated.addListener(function (tabId) {
+        var configuration = configPerTabId.get(tabId);
+        if (configuration) {
+            _getStatus(configuration);
+        }
     });
 
     // Hook before Request to log requests
