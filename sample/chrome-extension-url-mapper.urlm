@@ -1,0 +1,11 @@
+{
+    "name": "https://arnaudbuchholz.github.io/chrome-extension-url-mapper/index.html",
+    "mappings": [{
+        "description": "Should avoid .json substitution",
+        "url": "https://arnaudbuchholz.github.io/chrome-extension-url-mapper/index.json"
+    }, {
+        "description": "Replaces https with http",
+        "url": "https://arnaudbuchholz.github.io/chrome-extension-url-mapper/index.js",
+        "redirect": "http://arnaudbuchholz.github.io/chrome-extension-url-mapper/index.js"
+    }]
+}
