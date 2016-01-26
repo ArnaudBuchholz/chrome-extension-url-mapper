@@ -58,7 +58,10 @@
                     override;
                 for (idx = 0; idx < len; ++idx) {
                     override = this._mappings[idx].match(request);
-                    if (override) {
+                    if (true === override) {
+                        return; // stop there
+                    }
+                    if (undefined !== override) {
                         return override;
                     }
                 }

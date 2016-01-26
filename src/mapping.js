@@ -96,6 +96,7 @@
                     redirectUrl: buildURLCallback.call(this, request, buildURLCallbackParam)
                 };
             }
+            return true;
         }
 
     };
