@@ -1,6 +1,15 @@
 (function () {
     "use strict";
 
+    // returns true if found
+    function _readMapping (mappingJSON, jsonMember, thisMember) {
+        var value = mappingJSON[jsonMember];
+        if (undefined !== value) {
+            this[thisMember] = value;
+            return true;
+        }
+    }
+
     /**
      * Mapping class
      *
@@ -8,16 +17,12 @@
      * @constructor
      */
     function Mapping (mappingJSON) {
-        if (mappingJSON.url) {
-            this._urlStartWith = mappingJSON.url;
-        } else {
-            this._urlRegExp = new RegExp(mappingJSON.match);
+        if (!_readMapping.call(this, mappingJSON, um.MAPPING_SETTING_MATCH_URL, "_urlStartWith")) {
+            this._urlRegExp = new RegExp(mappingJSON[um.MAPPING_SETTING_MATCH_REGEXP]);
         }
-        if (mappingJSON.block) {
-            this._blocking = true;
-        } else {
-            this._redirect = mappingJSON.redirect;
-        }
+        _readMapping.call(this, mappingJSON, um.MAPPING_SETTING_REDIRECT_BLOCK, "_blocking");
+        _readMapping.call(this, mappingJSON, um.MAPPING_SETTING_REDIRECT_URL, "_redirect");
+        _readMapping.call(this._options, mappingJSON, um.MAPPING_SETTING_OPTION_OVR_CORS, "overrideCORS");
     }
 
     Mapping.prototype = {
@@ -34,23 +39,28 @@
         // @property {String} Redirect URL template
         _redirect: "",
 
+        // @property {um.MappingOptions} mapping options
+        _options: new um.MappingOptions(),
+
         /**
          * Match the given request
          *
          * @param {Object} request Object received on chrome.webRequest.onBeforeRequest
-         * @return {*}
-         * - Falsy if the mapping does not match the request
+         * @param {um.MappingOptions} options Instance receiving the mapping's specific options (if matching)
+         * @return {Object|Boolean|undefined}
          */
-        match: function (request) {
+        match: function (request, options) {
             var url = request.url,
                 matchResult;
             if (this._urlStartWith && 0 === url.indexOf(this._urlStartWith)) {
+                this._options.apply(options);
                 return this._override(request, this._replaceStartOfUrl);
             }
             if (this._urlRegExp) {
                 this._urlRegExp.lastIndex = 0;
                 matchResult = this._urlRegExp.exec(url);
                 if (matchResult) {
+                    this._options.apply(options);
                     return this._override(request, this._replaceRegExp, matchResult);
                 }
             }
