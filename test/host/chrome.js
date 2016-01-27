@@ -166,7 +166,31 @@
         webRequest: {
 
             // https://developer.chrome.com/extensions/webRequest#event-onBeforeRequest
-            onBeforeRequest: _allocateEventHandler(true)
+            onBeforeRequest: _allocateEventHandler(true),
+
+            // https://developer.chrome.com/extensions/webRequest#event-onBeforeSendHeaders
+            onBeforeSendHeaders: _allocateEventHandler(true),
+
+            // https://developer.chrome.com/extensions/webRequest#event-onSendHeaders
+            onSendHeaders: _allocateEventHandler(true),
+
+            // https://developer.chrome.com/extensions/webRequest#event-onHeadersReceived
+            onHeadersReceived: _allocateEventHandler(true),
+
+            // https://developer.chrome.com/extensions/webRequest#event-onAuthRequired
+            onAuthRequired: _allocateEventHandler(true),
+
+            // https://developer.chrome.com/extensions/webRequest#event-onResponseStarted
+            onResponseStarted: _allocateEventHandler(true),
+
+            // https://developer.chrome.com/extensions/webRequest#event-onBeforeRedirect
+            onBeforeRedirect: _allocateEventHandler(true),
+
+            // https://developer.chrome.com/extensions/webRequest#event-onCompleted
+            onCompleted: _allocateEventHandler(true),
+
+            // https://developer.chrome.com/extensions/webRequest#event-onErrorOccurred
+            onErrorOccurred: _allocateEventHandler(true)
         }
     };
 

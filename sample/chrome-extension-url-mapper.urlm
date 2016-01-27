@@ -7,6 +7,7 @@
         "description": "Substitute to file://",
         "url": "https://arnaudbuchholz.github.io/chrome-extension-url-mapper/index.json?xhr",
         "redirect": "http://buchholz.free.fr/chrome-extension-url-mapper/index.json",
+        "debug": true,
         "override-CORS": true
     }, {
         "description": "Replaces https with http",
