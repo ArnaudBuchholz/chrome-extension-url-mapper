@@ -10,6 +10,7 @@
     um.MAPPING_SETTING_REDIRECT_BLOCK   = "block";
     um.MAPPING_SETTING_REDIRECT_URL     = "redirect";
     um.MAPPING_SETTING_OPTION_OVR_CORS  = "override-CORS";
+    um.MAPPING_SETTING_OPTION_DEBUG     = "debug";
 
     um.MSG_QUERY_STATUS                 = "query-status";
     um.MSG_SET_CONFIGURATION            = "set-configuration";
