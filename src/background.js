@@ -76,9 +76,15 @@
 
     // Hook before Request to log requests
     chrome.webRequest.onBeforeRequest.addListener(function (request) {
-        var configuration = configPerTabId.get(request.tabId);
+        var configuration = configPerTabId.get(request.tabId),
+            options = new um.MappingOptions(),
+            result;
         if (configuration) {
-            return configuration.map(request);
+            result = configuration.map(request, options);
+            if (options.overrideCORS) {
+                // register the request ID to inject the correct header
+            }
+            return result;
         }
     }, {
         urls: ["<all_urls>"]

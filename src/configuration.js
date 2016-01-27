@@ -43,21 +43,30 @@
             return this._isEnabled;
         },
 
+        // Enable the configuration
         enable: function () {
             this._isEnabled = true;
         },
 
+        // Disable the configuration
         disable: function () {
             this._isEnabled = false;
         },
 
-        map: function (request) {
+        /**
+         * Map the current request: find a matching mapping and apply it
+         *
+         * @param {Object} request
+         * @param {um.MappingOptions} options
+         * @returns {Object|Boolean|undefined}
+         */
+        map: function (request, options) {
             if (this._isEnabled) {
                 var len = this._mappings.length,
                     idx,
                     override;
                 for (idx = 0; idx < len; ++idx) {
-                    override = this._mappings[idx].match(request);
+                    override = this._mappings[idx].match(request, options);
                     if (true === override) {
                         return; // stop there
                     }
