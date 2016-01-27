@@ -74,20 +74,38 @@
         }
     });
 
-    // Hook before Request to log requests
+    // WebRequest events
+    var _options = {};
+
     chrome.webRequest.onBeforeRequest.addListener(function (request) {
         var configuration = configPerTabId.get(request.tabId),
             options = new um.MappingOptions(),
             result;
         if (configuration) {
             result = configuration.map(request, options);
-            if (options.overrideCORS) {
-                // register the request ID to inject the correct header
+            if (options.areModified()) {
+                _options[request.requestId] = options;
+                if (options.debug) {
+                    console.log("onBeforeRequest", request);
+                }
             }
             return result;
         }
     }, {
         urls: ["<all_urls>"]
     }, ["blocking"]);
+
+    function _getCommonListener (name) {
+        return function (request) {
+            var options = _options[request.requestId];
+            if (options.debug) {
+                console.log(name, request);
+            }
+        }
+    }
+
+    chrome.webRequest.onBeforeSendHeaders.addListener(_getCommonListener("onBeforeSendHeaders"));
+    chrome.webRequest.onCompleted.addListener(_getCommonListener("onCompleted"));
+    chrome.webRequest.onErrorOccurred.addListener(_getCommonListener("onErrorOccurred"));
 
 }());
