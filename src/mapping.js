@@ -1,12 +1,35 @@
 (function () {
     "use strict";
 
-    // returns true if found
-    function _readMapping (mappingJSON, jsonMember, thisMember) {
-        var value = mappingJSON[jsonMember];
-        if (undefined !== value) {
-            this[thisMember] = value;
-            return true;
+    function _readMapping (mappingObject, mappingJSON, propertiesMapping) {
+        var objectProperty,
+            jsonProperty;
+        for (objectProperty in propertiesMapping) {
+            if (propertiesMapping.hasOwnProperty(objectProperty)) {
+                jsonProperty = propertiesMapping[objectProperty];
+                if (mappingJSON.hasOwnProperty(jsonProperty)) {
+                    mappingObject[objectProperty] = mappingJSON[jsonProperty];
+                }
+            }
+        }
+    }
+
+    // Create the option object only if an option is specified in the mapping
+    function _readOptionMapping (mappingObject, mappingJSON, propertiesMapping) {
+        var objectProperty,
+            jsonProperty,
+            options;
+        for (objectProperty in propertiesMapping) {
+            if (propertiesMapping.hasOwnProperty(objectProperty)) {
+                jsonProperty = propertiesMapping[objectProperty];
+                if (mappingJSON.hasOwnProperty(jsonProperty)) {
+                    if (undefined === options) {
+                        mappingObject._options = new um.MappingOptions();
+                        options = mappingObject._options;
+                    }
+                    options[objectProperty] = mappingJSON[jsonProperty];
+                }
+            }
         }
     }
 
@@ -17,12 +40,20 @@
      * @constructor
      */
     function Mapping (mappingJSON) {
-        if (!_readMapping.call(this, mappingJSON, um.MAPPING_SETTING_MATCH_URL, "_urlStartWith")) {
+        var url = mappingJSON[um.MAPPING_SETTING_MATCH_URL];
+        if (url) {
+            this._urlStartWith = url;
+        } else {
             this._urlRegExp = new RegExp(mappingJSON[um.MAPPING_SETTING_MATCH_REGEXP]);
         }
-        _readMapping.call(this, mappingJSON, um.MAPPING_SETTING_REDIRECT_BLOCK, "_blocking");
-        _readMapping.call(this, mappingJSON, um.MAPPING_SETTING_REDIRECT_URL, "_redirect");
-        _readMapping.call(this._options, mappingJSON, um.MAPPING_SETTING_OPTION_OVR_CORS, "overrideCORS");
+        _readMapping(this, mappingJSON, {
+            _blocking: um.MAPPING_SETTING_REDIRECT_BLOCK,
+            _redirect: um.MAPPING_SETTING_REDIRECT_URL
+        });
+        _readOptionMapping(this, mappingJSON, {
+            overrideCORS: um.MAPPING_SETTING_OPTION_OVR_CORS,
+            debug: um.MAPPING_SETTING_OPTION_DEBUG
+        });
     }
 
     Mapping.prototype = {
