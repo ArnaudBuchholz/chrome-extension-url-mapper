@@ -77,6 +77,13 @@
     // WebRequest events
     var _options = {};
 
+    function _log (event, request) {
+        var args = [].slice.call(arguments, 0);
+        args.unshift("requestId:", request.requestId);
+        args.unshift("tabId:", request.tabId);
+        console.log.apply(console, args);
+    }
+
     chrome.webRequest.onBeforeRequest.addListener(function (request) {
         var configuration = configPerTabId.get(request.tabId),
             options = new um.MappingOptions(),
@@ -86,7 +93,7 @@
             if (options.areModified()) {
                 _options[request.requestId] = options;
                 if (options.debug) {
-                    console.log("onBeforeRequest", request);
+                    _log("onBeforeRequest", request, result);
                 }
             }
             return result;
@@ -98,14 +105,25 @@
     function _getCommonListener (name) {
         return function (request) {
             var options = _options[request.requestId];
-            if (options.debug) {
-                console.log(name, request);
+            if (options && options.debug) {
+                _log(name, request, request.responseHeaders);
             }
-        }
+        };
     }
 
-    chrome.webRequest.onBeforeSendHeaders.addListener(_getCommonListener("onBeforeSendHeaders"));
-    chrome.webRequest.onCompleted.addListener(_getCommonListener("onCompleted"));
-    chrome.webRequest.onErrorOccurred.addListener(_getCommonListener("onErrorOccurred"));
+    [
+        "onBeforeSendHeaders",
+        "onSendHeaders",
+        "onHeadersReceived",
+        "onAuthRequired",
+        "onResponseStarted",
+        "onBeforeRedirect",
+        "onCompleted",
+        "onErrorOccurred"
+    ].forEach(function (name) {
+        chrome.webRequest[name].addListener(_getCommonListener(name), {
+            urls: ["<all_urls>"]
+        });
+    });
 
 }());
