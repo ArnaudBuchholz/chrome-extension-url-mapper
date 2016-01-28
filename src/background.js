@@ -121,9 +121,17 @@
         "onCompleted",
         "onErrorOccurred"
     ].forEach(function (name) {
-        chrome.webRequest[name].addListener(_getCommonListener(name), {
+        var args = [_getCommonListener(name)],
+            event;
+        // filter
+        args.push({
             urls: ["<all_urls>"]
         });
+        if ("onHeadersReceived" === name) {
+            args.push(["responseHeaders", "blocking"]);
+        }
+        event = chrome.webRequest[name];
+        event.addListener.apply(event, args);
     });
 
 }());
