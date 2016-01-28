@@ -10,10 +10,8 @@
         "debug": true,
         "override-CORS": true
     }, {
-        "url": "http://buchholz.free.fr/chrome-extension-url-mapper/index.json",
-        "debug": true
-    }, {
         "description": "Replaces https with http",
+        "debug": true,
         "url": "https://arnaudbuchholz.github.io/chrome-extension-url-mapper/index.js",
         "redirect": "http://arnaudbuchholz.github.io/chrome-extension-url-mapper/index.js"
     }]
