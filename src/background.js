@@ -75,7 +75,6 @@
     });
 
     // WebRequest events
-    var _options = {};
 
     function _log (event, request) {
         var args = [].slice.call(arguments, 0);
@@ -90,11 +89,8 @@
             result;
         if (configuration) {
             result = configuration.map(request, options);
-            if (options.areModified()) {
-                _options[request.requestId] = options;
-                if (options.debug) {
-                    _log("onBeforeRequest", request, result);
-                }
+            if (options.debug) {
+                _log("onBeforeRequest", request, result, options);
             }
             return result;
         }
@@ -104,9 +100,17 @@
 
     function _getCommonListener (name) {
         return function (request) {
-            var options = _options[request.requestId];
-            if (options && options.debug) {
-                _log(name, request, request.responseHeaders);
+            var configuration = configPerTabId.get(request.tabId),
+                options;
+            if (configuration) {
+                options = configuration.getOptions(request,
+                       "onBeforeRedirect" === name
+                    || "onCompleted" === name
+                    || "onErrorOccurred" === name
+                );
+                if (options && options.debug) {
+                    _log(name, request);
+                }
             }
         };
     }
@@ -121,12 +125,11 @@
         "onCompleted",
         "onErrorOccurred"
     ].forEach(function (name) {
-        var args = [_getCommonListener(name)],
+        var args = [_getCommonListener(name), {urls: ["<all_urls>"]}],
             event;
-        // filter
-        args.push({
-            urls: ["<all_urls>"]
-        });
+        if ("onBeforeSendHeaders" === name) {
+            args.push(["requestHeaders"]);
+        }
         if ("onHeadersReceived" === name) {
             args.push(["responseHeaders", "blocking"]);
         }
