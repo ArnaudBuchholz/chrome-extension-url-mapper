@@ -4,11 +4,14 @@
         "description": "Should avoid .json substitution",
         "url": "https://arnaudbuchholz.github.io/chrome-extension-url-mapper/index.json?jquery"
     }, {
-        "description": "Substitute to file://",
+        "description": "Substitute to another website",
         "url": "https://arnaudbuchholz.github.io/chrome-extension-url-mapper/index.json?xhr",
         "redirect": "http://buchholz.free.fr/chrome-extension-url-mapper/index.json",
         "debug": true,
         "override-CORS": true
+    }, {
+        "url": "http://buchholz.free.fr/chrome-extension-url-mapper/index.json",
+        "debug": true
     }, {
         "description": "Replaces https with http",
         "url": "https://arnaudbuchholz.github.io/chrome-extension-url-mapper/index.js",
