@@ -94,9 +94,7 @@
             }
             return result;
         }
-    }, {
-        urls: ["<all_urls>"]
-    }, ["blocking"]);
+    }, {urls: ["<all_urls>"]}, ["blocking"]);
 
     function _getCommonListener (name) {
         return function (request) {
@@ -118,7 +116,6 @@
     [
         "onBeforeSendHeaders",
         "onSendHeaders",
-        "onHeadersReceived",
         "onAuthRequired",
         "onResponseStarted",
         "onBeforeRedirect",
@@ -130,11 +127,29 @@
         if ("onBeforeSendHeaders" === name) {
             args.push(["requestHeaders"]);
         }
-        if ("onHeadersReceived" === name) {
-            args.push(["responseHeaders", "blocking"]);
-        }
         event = chrome.webRequest[name];
         event.addListener.apply(event, args);
     });
+
+    chrome.webRequest.onHeadersReceived.addListener(function (request) {
+        var configuration = configPerTabId.get(request.tabId),
+            options;
+        if (configuration) {
+            options = configuration.getOptions(request) || {};
+            if (options.debug) {
+                _log(name, request);
+            }
+            if (options.overrideCORS) {
+                request.responseHeaders.push({
+                    name: "Access-Control-Allow-Origin",
+                    value: "*"
+                });
+                return {
+                    responseHeaders: request.responseHeaders
+                };
+            }
+        }
+
+    }, {urls: ["<all_urls>"]}, ["responseHeaders", "blocking"]);
 
 }());
