@@ -11,6 +11,7 @@
     mocha.addFile("test/environment.js");
     mocha.addFile("test/multitabs.js");
     mocha.addFile("test/mapping.js");
+    mocha.addFile("test/configuration.js");
 
     // Now, you can run the tests.
     mocha.run(function (failures) {
