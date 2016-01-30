@@ -18,6 +18,10 @@
             "background.js"
         ]
     },
+    "content_scripts": [{
+        "matches": ["*://*/*"],
+        "js": ["content/xhr.js"]
+    }],
     "permissions": [
         "tabs",
         "activeTab",
