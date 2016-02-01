@@ -10,6 +10,7 @@
      */
     function Configuration (tabId, configJSON) {
         this._tabId = tabId;
+        this._configJSON = configJSON;
         this._name = configJSON.name;
         var mappings = this._mappings = [];
         configJSON.mappings.forEach(function (mapping) {
@@ -23,6 +24,9 @@
 
         // @property {String} Associated tab id
         _tabId: "",
+
+        // @property {Object} Backup of the configuration
+        _configJSON: null,
 
         // @property {String} name
         _name: "",
@@ -166,6 +170,10 @@
                     ++optionsPtr.refCount;
                 }
             }
+        },
+
+        toJSON: function () {
+            return this._configJSON;
         }
 
     };
