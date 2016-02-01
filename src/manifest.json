@@ -20,7 +20,15 @@
     },
     "content_scripts": [{
         "matches": ["*://*/*"],
-        "js": ["content/xhr.js"]
+        "js": [
+            "web.context.js",
+            "constants.js",
+            "mapoptions.js",
+            "mapping.js",
+            "configuration.js",
+            "content/xhr.js"
+        ],
+        "run_at": "document_start"
     }],
     "permissions": [
         "tabs",
