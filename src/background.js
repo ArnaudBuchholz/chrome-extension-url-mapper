@@ -4,6 +4,18 @@
     var configPerTabId = new um.ConfigurationMap(),
         messageHandlers = {};
 
+    messageHandlers[um.MSG_INIT_TAB] = function (configuration/*, msg*/) {
+        if (undefined !== configuration) {
+            var status = _getStatus(configuration);
+            status.configuration = configuration.toJSON();
+            return status;
+        }
+        return {
+            name: "",
+            enabled: false
+        };
+    };
+
     function _getStatus (configuration) {
         if (!configuration) {
             return {
@@ -54,7 +66,7 @@
 
     // Message handling
     chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-        var configuration = configPerTabId.get(request.tabId),
+        var configuration = configPerTabId.get(request.tabId || sender.tab.id),
             handler = messageHandlers[request.type],
             answer = handler(configuration, request);
         if (answer) {
