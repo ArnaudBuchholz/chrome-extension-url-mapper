@@ -14,7 +14,8 @@
             "mapoptions.js",
             "mapping.js",
             "configuration.js",
-            "configmap.js",
+            "backconfig.js",
+            "backconfigmap.js",
             "background.js"
         ]
     },
