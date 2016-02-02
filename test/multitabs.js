@@ -44,6 +44,7 @@ describe("Testing with multiple tabs", function () {
         describe("Configure the service on a selected tab", function () {
             before(function (done) {
                 var tab = tabs[SELECTED_TAB];
+                tab.setActive(); // Needs to be active
                 tab.popupView.whenNoMoreBusy = function () {
                     tab.popupView.whenNoMoreBusy = done;
                     tab.popupController.switchState();
