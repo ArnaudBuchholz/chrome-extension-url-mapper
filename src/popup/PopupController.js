@@ -37,14 +37,15 @@
         /**
          * Send a message to the background service
          *
-         * @param {String} type
-         * @param {Object} [options=undefined] options
+         * @param {Object|String} options
          * @return {Promise<Object>}
          */
-        _postMessage: function (type, options) {
-            options = options || {};
-            options.type = type;
-            options.tabId = this._tabId;
+        _postMessage: function (options) {
+            if ("string" === typeof options) {
+                options = {
+                    type: options
+                };
+            }
             return new Promise(function (resolve/*, reject*/) {
                 chrome.runtime.sendMessage(options, resolve);
             });
@@ -87,7 +88,8 @@
                 this._view.showError(e.message);
             }
             this._view.setBusy(true);
-            this._postMessage(um.MSG_SET_CONFIGURATION, {
+            this._postMessage({
+                type: um.MSG_SET_CONFIGURATION,
                 configuration: configuration
             })
                 .then(this._updateStatus);
