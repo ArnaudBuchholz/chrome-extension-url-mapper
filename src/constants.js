@@ -12,7 +12,7 @@
     um.MAPPING_SETTING_OPTION_OVR_CORS  = "override-CORS";
     um.MAPPING_SETTING_OPTION_DEBUG     = "debug";
 
-    um.MSG_INIT_TAB                     = "init-tab";
+    um.MSG_INIT_XHR_CONTENT_SCRIPT      = "init-xhr-content-script";
     um.MSG_QUERY_STATUS                 = "query-status";
     um.MSG_SET_CONFIGURATION            = "set-configuration";
     um.MSG_ENABLE_CONFIGURATION         = "enable-configuration";
