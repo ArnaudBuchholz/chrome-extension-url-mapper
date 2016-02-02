@@ -1,6 +1,13 @@
 (function () {
     "use strict";
 
+    /**
+     * This script is the only way to map synchronous XHR requests as webRequest redirection make them fail.
+     * It partly reproduces the behavior of the background (with the configuration object).
+     *
+     * Communication between the window and the content script is based on synchronous custom events
+     */
+
     function _output (method, args) {
         args.unshift("chrome-extension-url-mapper");
         console[method].apply(console, args);
@@ -14,11 +21,12 @@
         _output("error", [].slice.call(arguments, 0));
     }
 
+    // Override the XMLHttpRequest::open method
     function _installHook () {
 
-        // Override the XMLHttpRequest object
         var _open = window.XMLHttpRequest.prototype.open,
             _redirectUrl;
+
         window.XMLHttpRequest.prototype.open = function (method, url, async) {
             var args = [].slice.call(arguments, 0);
             if (false === async) {
@@ -44,7 +52,6 @@
     var _configuration,
         _link = document.createElement("a"); // Will be used to translate relative URL to absolute ones
 
-
     window.addEventListener("chrome-extension-url-mapper/request", function (event) {
         var options = new um.MappingOptions(),
             result,
@@ -52,36 +59,37 @@
         if (_configuration) {
             _link.href = event.detail.url;
             var request = {
-                tabId: 0,
                 url: _link.href
             };
             result = _configuration.map(request, options);
             if (options.debug) {
-                _log("onBeforeRequest", request, result, options);
+                _log("synchronous XMLHttpRequest::open", request, result, options);
             }
             if (result) {
                 if (result.cancel) {
-                    // Didn't found better
-                    redirectUrl = "about:blank";
+                    redirectUrl = "about:blank"; // Didn't found better
                 } else if (result.redirectUrl) {
                     redirectUrl = result.redirectUrl;
+                } else {
+                    return;
                 }
             }
+            window.dispatchEvent(new CustomEvent("chrome-extension-url-mapper/answer", {
+                detail: {
+                    redirectUrl: redirectUrl
+                }
+            }));
         }
-        window.dispatchEvent(new CustomEvent("chrome-extension-url-mapper/answer", {
-            detail: {
-                redirectUrl: redirectUrl
-            }
-        }));
     }, false);
 
     chrome.runtime.sendMessage({
-        type: um.MSG_INIT_TAB
+        type: um.MSG_INIT_XHR_CONTENT_SCRIPT
     }, function (response) {
-        if (response.enabled) {
-            _log("Enabled: " + response.name);
+        if (response.configuration) {
             _configuration = new um.Configuration(0, response.configuration);
-            _configuration.enable();
+            if (response.enabled) {
+                _configuration.enable();
+            }
             var _scriptElement = document.createElement("script");
             _scriptElement.innerHTML = "(" + _installHook + "())";
             var child = document.firstChild;
