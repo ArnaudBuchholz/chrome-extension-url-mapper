@@ -12,7 +12,8 @@
     require("./../../src/mapoptions.js");
     require("./../../src/mapping.js");
     require("./../../src/configuration.js");
-    require("./../../src/configmap.js");
+    require("./../../src/backconfig.js");
+    require("./../../src/backconfigmap.js");
     require("./../../src/background.js");
 
     require("./../../src/popup/PopupController.js");
