@@ -26,7 +26,7 @@
         chrome.browserAction.setBadgeText({tabId: configuration.getTabId(), text: badgeText});
     }
 
-    var configPerTabId = new um.ConfigurationMap(),
+    var configPerTabId = new um.BackgroundConfigurationMap(),
         messageHandlers = {
 
             // Triggered by the content script
@@ -130,5 +130,27 @@
         }
 
     }, {urls: ["<all_urls>"]}, ["responseHeaders", "blocking"]);
+
+
+    function _getLastStepOfRequest (name) {
+        return function (request) {
+            var configuration = configPerTabId.get(request.tabId),
+                options;
+            if (configuration) {
+                options = configuration.getOptions(request, true);
+                if (options && options.debug) {
+                    _log(name, request);
+                }
+            }
+        };
+    }
+
+    [
+        "onBeforeRedirect",
+        "onCompleted",
+        "onErrorOccurred"
+    ].forEach(function (name) {
+        chrome.webRequest[name].addListener(_getLastStepOfRequest(name), {urls: ["<all_urls>"]});
+    });
 
 }());
