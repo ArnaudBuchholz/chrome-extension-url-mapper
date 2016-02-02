@@ -3,56 +3,27 @@ describe("Configuration", function () {
 
     var URL = "https://github.com/ArnaudBuchholz/chrome-extension-url-mapper";
 
-    var tab,
-        view,
-        controller;
+    var configJSON = {
+            name: "test",
+            mappings: []
+        },
+        configuration;
 
-    before(function (done) {
-        chrome.tabs.create({}, function (newTab) {
-            tab = newTab;
-            view = new um.PopupView();
-            view.whenNoMoreBusy = done;
-            controller = new um.PopupController(view);
-        });
+    before(function () {
+        configuration = new um.Configuration(0, configJSON);
     });
 
-    describe("request lifecycle", function () {
-
-        before(function (done) {
-            view.whenNoMoreBusy = function () {
-                view.whenNoMoreBusy = done;
-                controller.switchState();
-            };
-            controller.setConfiguration(JSON.stringify({
-                "name": "Request lifecycle",
-                "mappings": [{
-                    url: "http",
-                    debug: true
-                }]
-            }));
-        });
-
-        it("shows the configuration name", function () {
-            assert("Request lifecycle" === view.name);
-        });
-
-        it("is enabled", function () {
-            assert(true === view.state);
-        });
-
-        it("processes the web requests", function () {
-            var answer = chrome.webRequest.onBeforeRequest({
-                tabId: tab.id,
-                requestId: 1,
-                url: URL
-            });
-            assert(undefined === answer);
-        });
-
+    it("exposes a name", function () {
+        assert("test" === configuration.getName());
     });
 
-    after(function (done) {
-        chrome.tabs.remove(tab.id, done);
+    it("is disabled by default", function () {
+        assert(false === configuration.getIsEnabled());
     });
+
+    it("keeps the initial configuration JSON", function () {
+        assert(configJSON === configuration.toJSON());
+    });
+
 
 });
