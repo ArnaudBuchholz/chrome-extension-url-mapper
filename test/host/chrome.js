@@ -45,6 +45,8 @@
         });
     }
 
+    _Tab.current = null;
+
     _Tab.prototype = {
         // @property {String} (allocated) tab identifier
         id: "",
@@ -60,14 +62,16 @@
 
         // Make this tab active
         setActive: function () {
-            Object.keys(_tabs).forEach(function (tabId) {
-                var tab = _tabs[tabId];
-                delete tab.active;
-                delete tab.selected;
-            });
+            var current = _Tab.current;
+            if (current) {
+                delete current.active;
+                delete current.selected;
+            }
             this.active = true;
             this.selected = true;
+            _Tab.current = this;
         }
+
     };
 
     var _chrome = {
@@ -89,7 +93,10 @@
             // https://developer.chrome.com/extensions/runtime#method-sendMessage
             // Simplified
             sendMessage: function (any, responseCallback) {
-                _chrome.runtime.onMessage(any, null, responseCallback);
+                // Grab active tab
+                _chrome.runtime.onMessage(any, {
+                    tab: _Tab.current
+                }, responseCallback);
             },
 
             // https://developer.chrome.com/extensions/runtime#event-onMessage
