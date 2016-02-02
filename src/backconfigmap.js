@@ -2,24 +2,24 @@
     "use strict";
 
     /**
-     * Configuration Map class
+     * Background Configuration Map class
      * Manages configuration per tabId
      *
      * @constructor
      */
-    function ConfigurationMap () {
+    function BackgroundConfigurationMap () {
     }
 
-    ConfigurationMap.prototype = {
+    BackgroundConfigurationMap.prototype = {
 
-        // @property {Object} Dictionary mapping tabId to a Configuration object
+        // @property {Object} Dictionary mapping tabId to a BackgroundConfiguration object
         _map: {},
 
         /**
          * Get configuration associated to the tabId
          *
          * @param {String} tabId
-         * @return {Configuration|undefined}
+         * @return {BackgroundConfiguration|undefined}
          */
         get: function (tabId) {
             return this._map[tabId];
@@ -30,10 +30,10 @@
          *
          * @param {String} tabId
          * @param {Object} configJSON Configuration JSON
-         * @return {Configuration}
+         * @return {BackgroundConfiguration}
          */
         set: function (tabId, configJSON) {
-            var configuration = new um.Configuration(tabId, configJSON);
+            var configuration = new um.BackgroundConfiguration(tabId, configJSON);
             this._map[tabId] = configuration;
             return configuration;
         },
@@ -50,6 +50,6 @@
     };
 
     // Export
-    um.ConfigurationMap = ConfigurationMap;
+    um.BackgroundConfigurationMap = BackgroundConfigurationMap;
 
 }());
