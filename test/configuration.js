@@ -10,7 +10,7 @@ describe("Configuration", function () {
         configuration;
 
     before(function () {
-        configuration = new um.Configuration(0, configJSON);
+        configuration = new um.Configuration(configJSON);
     });
 
     it("exposes a name", function () {
