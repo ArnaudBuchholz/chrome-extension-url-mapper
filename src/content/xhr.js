@@ -86,7 +86,7 @@
         type: um.MSG_INIT_XHR_CONTENT_SCRIPT
     }, function (response) {
         if (response.configuration) {
-            _configuration = new um.Configuration(0, response.configuration);
+            _configuration = new um.Configuration(response.configuration);
             if (response.enabled) {
                 _configuration.enable();
             }
