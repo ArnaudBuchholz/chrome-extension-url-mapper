@@ -46,6 +46,7 @@
                     type: options
                 };
             }
+            options.tabId = this._tabId;
             return new Promise(function (resolve/*, reject*/) {
                 chrome.runtime.sendMessage(options, resolve);
             });

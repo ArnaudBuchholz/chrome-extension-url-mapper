@@ -41,7 +41,7 @@
             MSG_QUERY_STATUS: _getStatus,
 
             MSG_SET_CONFIGURATION: function (configuration, msg, sender) {
-                configuration = configPerTabId.set(sender.tab.id, msg.configuration);
+                configuration = configPerTabId.set(msg.tabId, msg.configuration);
                 _setBrowserActionText(configuration);
                 return _getStatus(configuration);
             },
@@ -70,7 +70,7 @@
 
     // Message handling
     chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-        var configuration = configPerTabId.get(sender.tab.id),
+        var configuration = configPerTabId.get(request.tabId || sender.tab.id),
             handler = messageHandlers[request.type],
             answer = handler(configuration, request, sender);
         if (answer) {
