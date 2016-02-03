@@ -40,7 +40,7 @@
 
             MSG_QUERY_STATUS: _getStatus,
 
-            MSG_SET_CONFIGURATION: function (configuration, msg, sender) {
+            MSG_SET_CONFIGURATION: function (configuration, msg/*, sender*/) {
                 configuration = configPerTabId.set(msg.tabId, msg.configuration);
                 _setBrowserActionText(configuration);
                 return _getStatus(configuration);
@@ -112,6 +112,30 @@
         }
     }, {urls: ["<all_urls>"]}, ["blocking"]);
 
+    function _overrideHeaders (headers, overrides) {
+        var toAdd = Object.keys(overrides),
+            result;
+        result = headers.map(function (header) {
+            var name = header.name;
+            if (overrides.hasOwnProperty(name)) {
+                toAdd.splice(toAdd.indexOf(name), 1); // remove because processed
+                return {
+                    name: name,
+                    value: overrides[name]
+                };
+            }
+            return header;
+        });
+        // adds remaining
+        toAdd.forEach(function (name) {
+            result.push({
+                name: name,
+                value: overrides[name]
+            });
+        });
+        return result;
+    }
+
     chrome.webRequest.onHeadersReceived.addListener(function (request) {
         var configuration = configPerTabId.get(request.tabId),
             options;
@@ -120,12 +144,12 @@
             if (options.debug) {
                 _log("onHeadersReceived", request);
             }
-            request.responseHeaders.push({
-                name: "Access-Control-Allow-Origin",
-                value: "*" // Overridden
-            });
             return {
-                responseHeaders: request.responseHeaders
+                responseHeaders: _overrideHeaders(request.responseHeaders, {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET, OPTIONS", // POST not supported
+                    "Access-Control-Allow-Headers": "*"
+                })
             };
         }
 
