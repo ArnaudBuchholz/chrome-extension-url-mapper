@@ -4,6 +4,10 @@
         "description": "Should avoid .json substitution",
         "url": "https://arnaudbuchholz.github.io/chrome-extension-url-mapper/index.json?jquery"
     }, {
+        "description": "Removes thumbs-down image",
+        "url": "https://arnaudbuchholz.github.io/chrome-extension-url-mapper/thumbs-down.png",
+        "block": true
+    }, {
         "description": "Substitute to another website",
         "url": "https://arnaudbuchholz.github.io/chrome-extension-url-mapper/index.json?xhr",
         "redirect": "http://buchholz.free.fr/chrome-extension-url-mapper/index.json",
