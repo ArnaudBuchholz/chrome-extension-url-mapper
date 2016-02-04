@@ -51,7 +51,7 @@
             _redirect: um.MAPPING_SETTING_REDIRECT_URL
         });
         _readOptionMapping(this, mappingJSON, {
-            overrideCORS: um.MAPPING_SETTING_OPTION_OVR_CORS,
+            acHeaders: um.MAPPING_SETTING_OPTION_AC_HEADERS,
             debug: um.MAPPING_SETTING_OPTION_DEBUG
         });
     }
