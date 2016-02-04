@@ -148,7 +148,7 @@
                 responseHeaders: _overrideHeaders(request.responseHeaders, {
                     "Access-Control-Allow-Origin": "*",
                     "Access-Control-Allow-Methods": "GET, OPTIONS", // POST not supported
-                    "Access-Control-Allow-Headers": "*"
+                    "Access-Control-Allow-Headers": options.acHeaders || ""
                 })
             };
         }
