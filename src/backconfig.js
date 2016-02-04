@@ -108,8 +108,10 @@
                     delete this._redirects[url];
                 }
                 previousRequestOptionsPtr = this._options[previousRequestId];
-                previousRequestOptionsPtr.options.apply(options);
-                this.releaseOptions(previousRequestId);
+                if (previousRequestOptionsPtr) {
+                    previousRequestOptionsPtr.options.apply(options);
+                    this.releaseOptions(previousRequestId);
+                }
                 if (options.debug) {
                     console.log("tabId:", request.tabId, "requestId:", request.requestId,
                         "\u00AB from requestId: ", previousRequestId);
