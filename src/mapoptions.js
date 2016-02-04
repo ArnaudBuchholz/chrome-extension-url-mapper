@@ -12,6 +12,9 @@
 
     MappingOptions.prototype = {
 
+        // @property {String} Access-Control-Allow-Headers override
+        acHeaders: "",
+
         // @property {Boolean} Logs information about the request
         debug: false,
 
