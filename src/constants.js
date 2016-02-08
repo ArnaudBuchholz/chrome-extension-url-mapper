@@ -5,6 +5,10 @@
 
     um.MSG_NO_CONFIGURATION                 = "(click to select a configuration)";
 
+    um.CONFIG_NAME                          = "name";
+    um.CONFIG_INJECT                        = "inject";
+    um.CONFIG_MAPPINGS                      = "mappings";
+
     um.MAPPING_SETTING_MATCH_URL            = "url";
     um.MAPPING_SETTING_MATCH_REGEXP         = "match";
     um.MAPPING_SETTING_REDIRECT_BLOCK       = "block";
