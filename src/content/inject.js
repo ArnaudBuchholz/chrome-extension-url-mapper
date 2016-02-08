@@ -82,22 +82,33 @@
         }
     }, false);
 
+    function _buildInjectedScript () {
+        var scriptContent = ["(" + _installHook + "());"],
+            inject = _configuration.getInject();
+        if (inject) {
+            scriptContent.push("(function () {\r\n", inject, "\r\n}());");
+        }
+        return scriptContent.join("");
+    }
+
     chrome.runtime.sendMessage({
         type: um.MSG_INIT_XHR_CONTENT_SCRIPT
     }, function (response) {
+        var scriptElement,
+            child;
         if (response.configuration) {
             _configuration = new um.Configuration(response.configuration);
             if (response.enabled) {
                 _configuration.enable();
             }
-            var _scriptElement = document.createElement("script");
-            _scriptElement.innerHTML = "(" + _installHook + "())";
-            var child = document.firstChild;
+            scriptElement = document.createElement("script");
+            scriptElement.innerHTML = _buildInjectedScript();
+            child = document.firstChild;
             while (child && child.nodeType !== 1) {
                 child = child.nextSibling;
             }
             if (child) {
-                child.appendChild(_scriptElement);
+                child.appendChild(scriptElement);
             } else {
                 _error("chrome-extension-url-mapper", "Unable to install hook");
             }
