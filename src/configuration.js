@@ -11,9 +11,10 @@
     function Configuration (configJSON) {
         if (configJSON) {
             this._configJSON = configJSON;
-            this._name = configJSON.name;
+            this._name = configJSON[um.CONFIG_NAME];
+            this._inject = configJSON[um.CONFIG_INJECT];
             var mappings = this._mappings = [];
-            configJSON.mappings.forEach(function (mapping) {
+            configJSON[um.CONFIG_MAPPINGS].forEach(function (mapping) {
                 mappings.push(new um.Mapping(mapping));
             });
         }
@@ -27,6 +28,9 @@
         // @property {String} name
         _name: "",
 
+        // @property {String} injectable script
+        _inject: "",
+
         // @property {um.Mapping[]} array of mappings
         _mappings: [],
 
@@ -35,6 +39,10 @@
 
         getName: function () {
             return this._name;
+        },
+
+        getInject: function () {
+            return this._inject;
         },
 
         getIsEnabled: function () {
