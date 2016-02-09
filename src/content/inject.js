@@ -96,11 +96,9 @@
     }, function (response) {
         var scriptElement,
             child;
-        if (response.configuration) {
+        if (response.configuration && response.enabled) {
             _configuration = new um.Configuration(response.configuration);
-            if (response.enabled) {
-                _configuration.enable();
-            }
+            _configuration.enable();
             scriptElement = document.createElement("script");
             scriptElement.innerHTML = _buildInjectedScript();
             child = document.firstChild;
