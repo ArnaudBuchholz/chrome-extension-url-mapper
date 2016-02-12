@@ -27,7 +27,9 @@
             "mapoptions.js",
             "mapping.js",
             "configuration.js",
-            "content/inject.js"
+            "content/hook.js",
+            "content/xhr.js",
+            "content/main.js"
         ],
         "run_at": "document_start"
     }],
