@@ -6,18 +6,16 @@
             var args = [].slice.call(arguments, 0);
             args.unshift("chrome-extension-url-mapper");
             console[method].apply(console, args);
-        }
+        };
     }
 
     um.log = _genOutput("log");
     um.error = _genOutput("error");
-
-    var _configuration,
-        _link = document.createElement("a"); // Will be used to translate relative URL to absolute ones
+    um.configuration = null;
 
     function _buildInjectedScript () {
-        var scriptContent = ["(" + _installHook + "());"],
-            inject = _configuration.getInject();
+        var scriptContent = ["(" + um.hook + "());"],
+            inject = um.configuration.getInject();
         if (inject) {
             scriptContent.push("(function () {\r\n", inject, "\r\n}());");
         }
@@ -30,8 +28,8 @@
         var scriptElement,
             child;
         if (response.configuration && response.enabled) {
-            _configuration = new um.Configuration(response.configuration);
-            _configuration.enable();
+            um.configuration = new um.Configuration(response.configuration);
+            um.configuration.enable();
             scriptElement = document.createElement("script");
             scriptElement.innerHTML = _buildInjectedScript();
             child = document.firstChild;
@@ -41,7 +39,7 @@
             if (child) {
                 child.appendChild(scriptElement);
             } else {
-                _error("chrome-extension-url-mapper", "Unable to install hook");
+                um.error("Unable to install hook");
             }
         }
     });
