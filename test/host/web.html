@@ -3,6 +3,7 @@
         <meta charset="utf-8">
         <title>chrome-extension-url-mapper</title>
         <link rel="stylesheet" href="../../node_modules/mocha/mocha.css" />
+        <script src="https://cdn.jsdelivr.net/es6-promise-polyfill/1.1.1/promise.min.js"></script>
     </head>
     <body>
         <div id="mocha"></div>
@@ -39,6 +40,7 @@
         <script src="../mapping.js"></script>
         <script src="../configuration.js"></script>
         <script src="../background.js"></script>
+        <script src="../ajax.js"></script>
         <script>
             mocha.checkLeaks();
             mocha.globals([
