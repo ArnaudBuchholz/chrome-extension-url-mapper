@@ -4,8 +4,9 @@
     // Defines namespace
     global.um = {};
 
-    // Mocks chrome API
+    // Mocks chrome API & navigator environment
     global.chrome = require("./chrome.js");
+    global.window = require("./window.js");
 
     // Loads components
     require("./../../src/constants.js");
