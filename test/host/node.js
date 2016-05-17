@@ -16,8 +16,8 @@
     require("./../../src/backconfig.js");
     require("./../../src/backconfigmap.js");
     require("./../../src/background.js");
-
     require("./../../src/popup/PopupController.js");
+    require("./../../src/content/hook.js");
 
     // Mocks PopupView
     um.PopupView = require("./PopupView.js");
