@@ -1,6 +1,8 @@
 (function () {
     "use strict";
 
+    var fs = require("fs");
+
     function _nop () {}
 
     function _XMLHttpRequest () {
@@ -23,7 +25,12 @@
         },
 
         send: function () {
-            // TBD
+            this.responseText = fs.readFileSync("." + this._url).toString();
+            this.status = 200;
+            this.readyState = 4;
+            if (!this._synchronous) {
+                setTimeout(this.onreadystatechange.bind(this), 50);
+            }
         }
 
     };
