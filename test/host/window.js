@@ -35,9 +35,30 @@
 
     };
 
+    function _addEventListener (eventName, callback) {
+        var handlers = this._eventHandlers[eventName];
+        if (!handlers) {
+            handlers = this._eventHandlers[eventName] = [];
+        }
+        handlers.push(callback);
+    }
+
+    function _dispatchEvent (eventName, eventObject) {
+        var handlers = this._eventHandlers[eventName];
+        if (handlers) {
+            handlers.forEach(function (callback) {
+                callback(eventName, eventObject);
+            });
+        }
+    }
+
     var _window = {
 
-        XMLHttpRequest: _XMLHttpRequest
+        _eventHandlers: {},
+
+        XMLHttpRequest: _XMLHttpRequest,
+        addEventListener: _addEventListener,
+        dispatchEvent: _dispatchEvent
 
     };
 
