@@ -136,19 +136,36 @@
 
     };
 
-    function _addEventListener (eventName, callback) {
-        var handlers = this._eventHandlers[eventName];
+    function _CustomEvent (eventType, detail) {
+        this.type = eventType;
+        this.detail = detail;
+    }
+
+    function _addEventListener (eventType, callback) {
+        var handlers = this._eventHandlers[eventType];
         if (!handlers) {
-            handlers = this._eventHandlers[eventName] = [];
+            handlers = this._eventHandlers[eventType] = [];
         }
         handlers.push(callback);
     }
 
-    function _dispatchEvent (eventName, eventObject) {
-        var handlers = this._eventHandlers[eventName];
+    function _removeEventListener (eventType, callback) {
+        var handlers = this._eventHandlers[eventType],
+            pos;
+        if (handlers) {
+            pos = handlers.indexOf(callback);
+            if (-1 < pos) {
+                handlers.splice(pos, 1);
+            }
+        }
+    }
+
+    function _dispatchEvent (eventObject) {
+        var eventType = eventObject,
+            handlers = this._eventHandlers[eventType];
         if (handlers) {
             handlers.forEach(function (callback) {
-                callback(eventName, eventObject);
+                callback(eventType, eventObject);
             });
         }
     }
@@ -159,7 +176,10 @@
 
         XMLHttpRequest: _XMLHttpRequest,
         addEventListener: _addEventListener,
-        dispatchEvent: _dispatchEvent
+        removeEventListener: _removeEventListener,
+        dispatchEvent: _dispatchEvent,
+
+        CustomEvent: _CustomEvent
 
     };
 
