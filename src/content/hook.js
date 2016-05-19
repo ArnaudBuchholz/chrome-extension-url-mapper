@@ -40,7 +40,7 @@
         window.XMLHttpRequest.prototype.open = function () {
             var args = [].slice.call(arguments, 0);
             _overrideID = undefined;
-            window.dispatchEvent(new CustomEvent("chrome-extension-url-mapper<<xhr::open", {
+            window.dispatchEvent(new window.CustomEvent("chrome-extension-url-mapper<<xhr::open", {
                 detail: args
             }));
             if (_overrideID) {
@@ -48,9 +48,12 @@
             }
             return _open.apply(this, args);
         };
-        window.addEventListener("chrome-extension-url-mapper>>xhr::open", function (event) {
+
+        function _receiveExtensionOpenAnswer (event) {
             _overrideID = event.detail.id;
-        }, false);
+        }
+
+        window.addEventListener("chrome-extension-url-mapper>>xhr::open", _receiveExtensionOpenAnswer, false);
 
         window.XMLHttpRequest.prototype.setRequestHeader = function (header, value) {
             if (undefined === this._headers) {
@@ -76,7 +79,8 @@
                 _send.apply(this, args);
             }
         };
-        window.addEventListener("chrome-extension-url-mapper>>xhr::send", function (event) {
+
+        function _receiveExtensionSendAnswer (event) {
             var xhr = _overriddenXHR[event.detail.id];
             if (event.detail.properties) {
                 Object.keys(event.detail.xhr).forEach(function (property) {
@@ -86,7 +90,17 @@
             if (event.detail.readyState) {
                 xhr.onreadystatechange.apply(xhr, event.detail.readyState);
             }
-        }, false);
+        }
+
+        window.addEventListener("chrome-extension-url-mapper>>xhr::send", _receiveExtensionSendAnswer, false);
+
+        window._removeUrlMapperHook = function () {
+            window.XMLHttpRequest.prototype.open = _open;
+            window.removeEventListener("chrome-extension-url-mapper>>xhr::open", _receiveExtensionOpenAnswer);
+            window.XMLHttpRequest.prototype.setRequestHeader = _setRequestHeader;
+            window.XMLHttpRequest.prototype.send = _send;
+            window.removeEventListener("chrome-extension-url-mapper>>xhr::send", _receiveExtensionSendAnswer);
+        };
 
     };
 
