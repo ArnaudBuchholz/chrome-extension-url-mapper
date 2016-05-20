@@ -43,7 +43,7 @@
             window.dispatchEvent(new window.CustomEvent("chrome-extension-url-mapper<<xhr::open", {
                 detail: args
             }));
-            if (_overrideID) {
+            if (undefined !== _overrideID) {
                 _overrideXHR(this);
             }
             return _open.apply(this, args);
@@ -65,7 +65,9 @@
 
         window.XMLHttpRequest.prototype.send = function () {
             var args = [].slice.call(arguments, 0);
-            if (this._overrideID) {
+            if (undefined === this._overrideID) {
+                _send.apply(this, args);
+            } else {
                 window.dispatchEvent(new CustomEvent("chrome-extension-url-mapper<<xhr::send", {
                     detail: {
                         id: this._overrideID,
@@ -75,20 +77,19 @@
                         args: args
                     }
                 }));
-            } else {
-                _send.apply(this, args);
             }
         };
 
         function _receiveExtensionSendAnswer (event) {
-            var xhr = _overriddenXHR[event.detail.id];
-            if (event.detail.properties) {
-                Object.keys(event.detail.xhr).forEach(function (property) {
-                    xhr["_" + property] = this[property];
-                }, event.detail.properties);
+            var xhr = _overriddenXHR[event.detail.id],
+                properties = event.detail.xhr;
+            if (properties) {
+                Object.keys(properties).forEach(function (property) {
+                    xhr["_" + property] = properties[property];
+                });
             }
-            if (event.detail.readyState) {
-                xhr.onreadystatechange.apply(xhr, event.detail.readyState);
+            if (properties.readyState && xhr.onreadystatechange) {
+                xhr.onreadystatechange();
             }
         }
 
