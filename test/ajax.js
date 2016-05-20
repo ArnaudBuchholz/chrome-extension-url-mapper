@@ -55,6 +55,50 @@ describe("Ajax", function () {
 
         checkAjaxHandling();
 
+        describe("Test 1", function () {
+
+            function _receiveExtensionOpenRequest (event) {
+                var parameters = event.detail;
+                if (parameters[0] === "GET" && parameters[1] === "/test/data/hello.json") {
+                    window.dispatchEvent(new CustomEvent("chrome-extension-url-mapper>>xhr::open", {
+                        detail: {
+                            id: 0
+                        }
+                    }));
+                }
+            }
+
+            function _receiveExtensionSendRequest (event) {
+                var details = event.detail;
+                window.dispatchEvent(new CustomEvent("chrome-extension-url-mapper>>xhr::send", {
+                    detail: {
+                        id: details.id,
+                        xhr: {
+                            responseText: "{\"message\": \"Hello, World!\"}",
+                            responseType: "text/plain",
+                            status: 200,
+                            statusText: "OK",
+                            readyState: 4
+                        }
+                    }
+                }));
+
+            }
+
+            before(function () {
+                window.addEventListener("chrome-extension-url-mapper<<xhr::open", _receiveExtensionOpenRequest);
+                window.addEventListener("chrome-extension-url-mapper<<xhr::send", _receiveExtensionSendRequest);
+            });
+
+            after(function () {
+                window.removeEventListener("chrome-extension-url-mapper<<xhr::open", _receiveExtensionOpenRequest);
+                window.removeEventListener("chrome-extension-url-mapper<<xhr::send", _receiveExtensionSendRequest);
+            });
+
+            checkAjaxHandling();
+
+        });
+
     });
 
 });
