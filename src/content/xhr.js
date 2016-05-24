@@ -15,7 +15,7 @@
             result,
             redirectUrl;
         if (um.configuration) {
-            var args = event.detail.args;
+            var args = event.detail;
             _link.href = args[1];
             var request = {
                 url: _link.href
