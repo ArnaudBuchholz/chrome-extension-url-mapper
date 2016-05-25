@@ -75,13 +75,11 @@ describe("Ajax", function () {
                 assert(details.data === data); // Whatever the data that was given, it should be sent back
                 window.dispatchEvent(new CustomEvent("chrome-extension-url-mapper>>xhr::send", {
                     detail: {
-                        xhr: {
-                            responseText: "{\"message\": \"Hello, World!\"}",
-                            responseType: "text/plain",
-                            status: 200,
-                            statusText: "OK",
-                            readyState: 4
-                        }
+                        responseText: "{\"message\": \"Hello, World!\"}",
+                        responseType: "text/plain",
+                        status: 200,
+                        statusText: "OK",
+                        readyState: 4
                     }
                 }));
 
