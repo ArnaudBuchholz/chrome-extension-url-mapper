@@ -33,12 +33,39 @@
                     return;
                 }
             }
-            window.dispatchEvent(new CustomEvent("chrome-extension-url-mapper>>xhr::open", {
-                detail: {
-                    id: redirectUrl
-                }
-            }));
+            if (redirectUrl) {
+                window.dispatchEvent(new CustomEvent("chrome-extension-url-mapper>>xhr::open", {
+                    detail: {
+                        data: {
+                            method: args[0],
+                            url: redirectUrl
+                        }
+                    }
+                }));
+            }
         }
+    }, false);
+
+    window.addEventListener("chrome-extension-url-mapper<<xhr::send", function (event) {
+        var data = events.detail.data,
+            xhr = new XMLHttpRequest(),
+            detail = {};
+        xhr.open(data.method, data.url, true /*synchronous*/);
+        // TODO process headers
+        xhr.send();
+        [
+            "readyState",
+            "response",
+            "responseText",
+            "responseType",
+            "status",
+            "statusText"
+        ].forEach(function (property) {
+            detail[property] = xhr[property];
+        });
+        window.dispatchEvent(new CustomEvent("chrome-extension-url-mapper>>xhr::send", {
+            detail: detail
+        }));
     }, false);
 
 }());
