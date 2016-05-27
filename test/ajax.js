@@ -1,7 +1,13 @@
 describe("Ajax", function () {
     "use strict";
 
-    function checkAjaxHandling () {
+    var HELLO_WORLD = "Hello, World!";
+
+    function checkAjaxHandling (expectedMessage) {
+
+        if (!expectedMessage) {
+            expectedMessage = HELLO_WORLD;
+        }
 
         it("allows asynchronous loading", function (done) {
             var xhr = new window.XMLHttpRequest();
@@ -10,7 +16,7 @@ describe("Ajax", function () {
                 if (4 === xhr.readyState) {
                     if (2 === Math.floor(xhr.status / 100)) {
                         var response = JSON.parse(xhr.responseText);
-                        assert("Hello, World!" === response.message);
+                        assert(expectedMessage === response.message);
                         done();
                     } else {
                         done(xhr.responseText);
@@ -26,7 +32,7 @@ describe("Ajax", function () {
             xhr.send();
             if (2 === Math.floor(xhr.status / 100)) {
                 var response = JSON.parse(xhr.responseText);
-                assert("Hello, World!" === response.message);
+                assert(expectedMessage === response.message);
                 done();
             } else {
                 done(xhr.responseText);
@@ -39,7 +45,7 @@ describe("Ajax", function () {
         checkAjaxHandling();
     });
 
-    describe("Installing hook (no interference)", function () {
+    describe("Installing hook", function () {
 
         var unhook;
 
@@ -53,9 +59,13 @@ describe("Ajax", function () {
             unhook();
         });
 
-        checkAjaxHandling();
+        describe("No override", function () {
 
-        describe("Test 1", function () {
+            checkAjaxHandling();
+
+        });
+
+        function genOverride (message) {
 
             var data = {};
 
@@ -75,7 +85,9 @@ describe("Ajax", function () {
                 assert(details.data === data); // Whatever the data that was given, it should be sent back
                 window.dispatchEvent(new CustomEvent("chrome-extension-url-mapper>>xhr::send", {
                     detail: {
-                        responseText: "{\"message\": \"Hello, World!\"}",
+                        responseText: JSON.stringify({
+                            message: message
+                        }),
                         responseType: "text/plain",
                         status: 200,
                         statusText: "OK",
@@ -95,7 +107,20 @@ describe("Ajax", function () {
                 window.removeEventListener("chrome-extension-url-mapper<<xhr::send", _receiveExtensionSendRequest);
             });
 
+        }
+
+        describe("Override for the same result", function () {
+
+            genOverride(HELLO_WORLD);
             checkAjaxHandling();
+
+        });
+
+        describe("Override for a different result", function () {
+
+            var message = "Goodbye, World!";
+            genOverride(message);
+            checkAjaxHandling(message);
 
         });
 
