@@ -7,6 +7,11 @@
         "default_icon": "gfx/folder.png",
         "default_popup": "popup/view.html"
     },
+    "icons": {
+        "16": "gfx/explore16.png",
+        "48": "gfx/explore48.png",
+        "128": "gfx/explore128.png"
+    },
     "background": {
         "scripts": [
             "web.context.js",
