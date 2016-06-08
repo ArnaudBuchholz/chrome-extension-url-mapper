@@ -1,6 +1,8 @@
 (function () {
     "use strict";
 
+    //region Internal messages handling
+
     // Compute status of (optional) configuration
     function _getStatus (configuration) {
         if (!configuration) {
@@ -26,6 +28,7 @@
         chrome.browserAction.setBadgeText({tabId: configuration.getTabId(), text: badgeText});
     }
 
+    // Mapping of message handlers
     var configPerTabId = new um.BackgroundConfigurationMap(),
         messageHandlers = {
 
@@ -78,7 +81,10 @@
         }
     });
 
-    // Tab events
+    //endregion
+
+    //region Tab events
+
     chrome.tabs.onRemoved.addListener(function (tabId) {
         configPerTabId.clear(tabId);
     });
@@ -90,7 +96,26 @@
         }
     });
 
-    // WebRequest events
+    //endregion
+
+    //region WebRequest events
+
+    /**
+     * Wrap the listener function to receive the proper configuration (and avoid calling if no configuration is found)
+     *
+     * @param {Function} listener function handler(request, configuration)
+     * @returns {Function}
+     */
+    function _wrapRequestListener (listener) {
+        return function (request) {
+            var configuration = configPerTabId.get(request.tabId);
+            if (configuration) {
+                return listener(request, configuration);
+            }
+        };
+    }
+
+    // Generic logging
     function _log (event, request) {
         var args = [].slice.call(arguments, 0);
         args.unshift("requestId:", request.requestId);
@@ -98,19 +123,23 @@
         console.log.apply(console, args);
     }
 
-    chrome.webRequest.onBeforeRequest.addListener(function (request) {
-        var configuration = configPerTabId.get(request.tabId),
-            options,
-            result;
-        if (configuration) {
-            options = new um.MappingOptions();
-            result = configuration.map(request, options);
-            if (options.debug) {
-                _log("onBeforeRequest", request, result, options);
-            }
-            return result;
+    // Get options and log if debug
+    function _getOptionsAndLog (request, configuration, name) {
+        var options = configuration.getOptions(request) || {};
+        if (options.debug) {
+            _log(name, request);
         }
-    }, {urls: ["<all_urls>"]}, ["blocking"]);
+        return options;
+    }
+
+    chrome.webRequest.onBeforeRequest.addListener(_wrapRequestListener(function (request, configuration) {
+        var options = new um.MappingOptions(),
+            result = configuration.map(request, options);
+        if (options.debug) {
+            _log("onBeforeRequest", request, result, options);
+        }
+        return result;
+    }), {urls: ["<all_urls>"]}, ["blocking"]);
 
     function _overrideHeaders (headers, overrides) {
         var toAdd = Object.keys(overrides),
@@ -136,45 +165,40 @@
         return result;
     }
 
-    chrome.webRequest.onHeadersReceived.addListener(function (request) {
-        var configuration = configPerTabId.get(request.tabId),
-            options;
-        if (configuration) {
-            options = configuration.getOptions(request) || {};
-            if (options.debug) {
-                _log("onHeadersReceived", request);
-            }
-            return {
-                responseHeaders: _overrideHeaders(request.responseHeaders, {
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Methods": "GET, OPTIONS", // POST not supported
-                    "Access-Control-Allow-Headers": options.acHeaders || ""
-                })
-            };
+    chrome.webRequest.onHeadersReceived.addListener(_wrapRequestListener(function (request, configuration) {
+        var options = _getOptionsAndLog(request, configuration, "onHeadersReceived");
+        return {
+            responseHeaders: _overrideHeaders(request.responseHeaders, {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, OPTIONS", // POST not supported
+                "Access-Control-Allow-Headers": options.acHeaders || ""
+            })
+        };
+
+    }), {urls: ["<all_urls>"]}, ["responseHeaders", "blocking"]);
+
+    chrome.webRequest.onErrorOccurred.addListener(_wrapRequestListener(function (request, configuration) {
+        var options = _getOptionsAndLog(request, configuration, "onErrorOccurred");
+        if ("net::ERR_ABORTED" === request.error) {
+            // This might come from unsecure content
+            chrome.browserAction.setBadgeBackgroundColor({tabId: configuration.getTabId(), color: "#FF0000"});
+            chrome.browserAction.setTitle({tabId: configuration.getTabId(), title: "Allow unsecure content"});
         }
 
-    }, {urls: ["<all_urls>"]}, ["responseHeaders", "blocking"]);
+    }), {urls: ["<all_urls>"]});
 
 
-    function _getLastStepOfRequest (name) {
-        return function (request) {
-            var configuration = configPerTabId.get(request.tabId),
-                options;
-            if (configuration) {
-                options = configuration.getOptions(request, true);
-                if (options && options.debug) {
-                    _log(name, request);
-                }
-            }
-        };
-    }
 
+    // Logging listeners
     [
         "onBeforeRedirect",
-        "onCompleted",
-        "onErrorOccurred"
+        "onCompleted"
     ].forEach(function (name) {
-        chrome.webRequest[name].addListener(_getLastStepOfRequest(name), {urls: ["<all_urls>"]});
+        chrome.webRequest[name].addListener(_wrapRequestListener(function (request, configuration) {
+            _getOptionsAndLog(request, configuration, name);
+        }), {urls: ["<all_urls>"]});
     });
+
+    //endregion
 
 }());
