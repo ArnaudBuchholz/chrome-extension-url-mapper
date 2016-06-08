@@ -181,13 +181,44 @@
         var options = _getOptionsAndLog(request, configuration, "onErrorOccurred");
         if ("net::ERR_ABORTED" === request.error) {
             // This might come from unsecure content
-            chrome.browserAction.setBadgeBackgroundColor({tabId: configuration.getTabId(), color: "#FF0000"});
-            chrome.browserAction.setTitle({tabId: configuration.getTabId(), title: "Allow unsecure content"});
+            _showWarning(configuration.getTabId());
         }
 
     }), {urls: ["<all_urls>"]});
 
+    var WARNING_TEXT = "WARNING WAR",
+        WARNING_LENGTH = 8,
+        WARNING_DELAY = 250,
+        WARNING_DURATION = 5000;
 
+    function _warningLoop () {
+        chrome.browserAction.setBadgeText({tabId: this.tabId, text: WARNING_TEXT.substr(this.step, 4)});
+        chrome.browserAction.setTitle({tabId: this.tabId, title: "Allow unsecure content"});
+        this.step = (this.step + 1) % WARNING_LENGTH;
+        if (new Date() - this.timeStamp > WARNING_DURATION) {
+            clearInterval(this.interval);
+            chrome.browserAction.setBadgeText({tabId: this.tabId, text: WARNING_TEXT.substr(0, 4)});
+            this.interval = 0;
+        }
+    }
+
+    function _showWarning (tabId) {
+        var data = _showWarning[tabId],
+            text = "WARNING WAR",
+            textLen = 8;
+        if (!data) {
+            data = {
+                tabId: tabId,
+                step: 0,
+                interval: 0
+            };
+            _showWarning[tabId] = data;
+        }
+        data.timeStamp = new Date();
+        if (!data.interval) {
+            data.interval = setInterval(_warningLoop.bind(data), WARNING_DELAY);
+        }
+    }
 
     // Logging listeners
     [
